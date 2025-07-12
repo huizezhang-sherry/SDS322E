@@ -1,0 +1,251 @@
+---
+title: "Case study: analysing Wikipedia minimum annual leave data"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> week 01 lecture 01 Fall 2025"
+format: 
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    aspectratio: 169
+    theme: serif
+    preview-links: auto
+    pdf-separate-fragments: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
+options(pillar.width = 70)
+library(tidyverse)
+library(rnaturalearth)
+```
+
+## [List of minimum annual leave by country]{.r-fit-text}
+
+<center>![](figures/wiki-page.png)</center>
+
+## [Talk out loud analysis on the annual leave data]{.r-fit-text} {#sec-outline}
+
+Task: 
+  
+* Scrape the minimum annual leave data from Wikipedia and investigate country differences
+
+Skill you need (not a complete list):
+
+* Scraping data from a website: `rvest` `r emo::ji("check")`
+* Some data cleaning with `dplyr` and others `r emo::ji("check")`
+* Sourcing a map data and plotting with `ggplot2` `r emo::ji("check")`
+
+Sounds easy, right?
+
+
+## Scraping data from Wikipedia
+
+```{r}
+html <- "https://en.wikipedia.org/wiki/List_of_minimum_annual_leave_by_country"
+raw <- rvest::read_html(html) |>
+  rvest::html_table()
+holiday_df <- raw[[2]] |> janitor::clean_names() |> select(1:5)
+names(holiday_df) <- c("country", "notes", "paid_vacation",
+                       "public_holiday", "total")
+holiday_df
+```
+
+
+## Cont.
+
+Oops, hyper links are not read properly and we also have other issues (use `View(holiday_df)`)
+
+. . .
+
+* The parsing for Luxembourg is wrong....
+
+```{r}
+holiday_df |> filter(row_number() %in% 102:113)
+```
+
+## Cont. 
+  
+* There are those "8–10", "7–14", "5/10/15" and 
+  
+```{r}
+holiday_df |> filter(str_detect(paid_vacation, "/"))
+holiday_df |> filter(str_detect(paid_vacation, "-"))
+```
+
+## Data wrangling
+
+Well, the data will be much easier to clean if all the numbers are in 2-digits format with padding zeros for the single digit numbers, e.g. 5/10/15 -> 05/10/15. 
+
+```{r}
+holiday_df2 <- holiday_df |>
+  filter(!row_number() %in% 103:113) |>
+  mutate(paid_vacation = str_sub(paid_vacation, 1, 2) |> as.numeric(paid_vacation),
+         public_holiday = str_sub(public_holiday, 1, 2) |> as.numeric(),
+         total = str_sub(total, 1, 2) |> as.numeric(total),
+         paid_vacation = ifelse(is.na(paid_vacation), total - public_holiday, paid_vacation),
+         public_holiday = ifelse(is.na(public_holiday), total - paid_vacation, public_holiday),
+         total = ifelse(is.na(total), paid_vacation + public_holiday, total))
+
+holiday_df2
+```
+
+
+## [Sourcing a map data and combine with the holiday data]{.r-fit-text}
+
+Get the map data with `rnaturalearth`:
+
+```{r}
+(country_df <- countries110 |>
+  as_tibble() |>
+  select(SOVEREIGNT, geometry) |>
+  rename(country = SOVEREIGNT))
+```
+
+##  Cont.
+
+Join the holiday data and the map data using `left_join`:
+
+```{r}
+(res <- holiday_df2 |> left_join(country_df, by = "country"))
+```
+
+Now we have those empty geometries... What happened? Can you pull out all the empty ones? 
+
+## Cont.
+
+*My instinct is to try `is.null(geometry)` but R is not happy about it, so I asked Google... and find `sf::st_is_empty()`*
+
+```{r}
+res |> filter(sf::st_is_empty(geometry))
+```
+
+## Cont.
+
+This doesn't look right... The difference is 16 but we get 37 - why?
+
+```{r}
+nrow(holiday_df2)
+nrow(country_df)
+nrow(holiday_df2) - nrow(country_df)
+```
+
+```{r}
+nrow(res |> filter(sf::st_is_empty(geometry)))
+```
+
+
+## Cont. 
+
+* There are some rows that are not joined.....
+
+* Now we have to figure out the small discrepancies from joining country names in text... e.g. "United States" vs. "United States of America"... `r emo::ji("disbelief")`
+
+. . .
+
+* And I'm gonna have to check the names one by one and that's probably an hour of boring work.... `r emo::ji("fear")`
+
+. . .
+
+* But do you know there is a package called `countrycode` that can help us with this?
+
+## A detour to `countrycode`
+
+```{r}
+countrycode::countryname("United States", "iso3c")
+countrycode::countryname("United States of America", "iso3c")
+```
+
+## Cont. 
+
+```{r}
+holiday_df3 <- holiday_df2 |>
+  mutate(code = countrycode::countryname(country, "iso3c"))
+
+country_df2 <- country_df |>
+  mutate(code = countrycode::countryname(country, "iso3c"))
+```
+
+
+```{r warning = TRUE}
+final_df <- holiday_df3 |> left_join(country_df2, by = "code")
+```
+
+Noooo... where has been messed up in our joining...
+
+## Cont.
+
+> Row 44 of `x` matches multiple rows in `y`.
+
+```{r}
+holiday_df3 |> filter(row_number() == 44)
+country_df2 |> filter(code == "CYP")
+```
+
+## Cont.
+
+> Row 168 of `y` matches multiple rows in `x`.
+
+```{r}
+country_df2 |> filter(row_number() == 168) 
+```
+
+It doesn't have a code and hence matching other `NA`s 
+
+```{r}
+holiday_df3 |> filter(is.na(code))
+```
+
+
+## Plot total annual leave by country
+
+```{r}
+#| fig.align: center
+final_df |>
+  ggplot() +
+  geom_sf(aes(geometry = geometry, fill = total)) +
+  scale_fill_distiller(palette = "YlOrRd", direction = -1) +
+  ggthemes::theme_map()
+
+```
+
+## Summary
+
+We have a practical session to chain a few components we have learnt so far together: 
+
+  * `rvest` for webscraping, 
+  * `dplyr`, `stringr` for wrangling data, 
+  * `rnaturalearth` and `sf` for map related processing 
+  * `ggplot2` and `ggthemes` for plotting. 
+  * `countrycode` for reconciling country names from multiple data sources.
+
+## Good practice to carry onwards...
+
+  1. Numbers are all padded with zeros to have the same number of digits - when you name YOUR files: 01-extract-data.R rather than 1-extract-data.R
+  2. Having a corresponding code makes joining name-related text data easier
+
+## Summary {.smaller}
+
+* I hope you can see that data analysis is not that straight forward **because data never ever come to you as expected.** 
+
+. . .
+
+* You can have an outline of things to expect (Slide 2), but you generally won't know what you will encounter until you start working on the data (different formats of number recording, the joining hiccup with country names, the many-to-many join issue ...).
+
+. . .
+
+ * This point is commonly under-appreciated in industry and/or academia because everything is straight forward when looking at the final script when everything is figured out.
+
+
+## Summary {.smaller}
+
+* I hope by the end of the semester, you are comfortable with scraping some data, cleaning them, making some plots, and sharing your insights and code with others - it is a valueable skill to have! 
+
+. . . 
+
+* It is not about being able to answer *"how to subset the first two digits of a string"* - no one is going to ask you like this, but they might expect you to clean up the messy numerical columns when downloading the data from a website. 
+
+. . . 
+
+* You can technically practice this by using any website of your interest - do some data wrangling and plot them on the map or across time (some may be more difficult to scrap than others).
+
+
