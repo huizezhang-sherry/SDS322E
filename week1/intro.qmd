@@ -30,12 +30,26 @@ lecture, lab, instructor, Grad TA: UGCAs:
 
 end goal: be comfortable to code in R to do some analysis and have enough breadth of knowledge to know where to look for things you need
 
+## Resources {.smaller background-image="figures/books.png" background-size="30%" background-position="50% 80%"}
+
+-   **R for Data Science**: https://r4ds.hadley.nz/
+-   **ggplot2: Elegant Graphics for Data Analysis (3e)** https://ggplot2-book.org/
+-   [Stack Overflow](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50) is a great source of answers to common ggplot2 questions. It is also a great place to get help, once you have created a reproducible example that illustrates your problem.
+
 ## What you not learn 
 
 -   calculus, linear algebra, probability
 -   latex
 
 ## Why data science
+
+## About me
+
+Postdoc, research on visualization, data analysis
+
+# Use of LLMs
+
+-   make up functions, old functions...
 
 ## Install R and RStudio
 
@@ -52,6 +66,9 @@ Even if you installed R/RStudio previously, it's important to have the latest ve
 
 <center>![](figures/rstudio.png)</center>
 
+Here is where you try and experiment, here is what you have saved in the workspace, here is where you write down things you want to keep for the future
+
+
 ## Git and GitHub 
 
 - This course in general doesn't require knowledge on version control, but you will need to use access pages on GitHub. 
@@ -62,18 +79,6 @@ Even if you installed R/RStudio previously, it's important to have the latest ve
 - Register a GitHub account: <https://github.com/>
 - Reference: Happy Git with R
   *  <https://happygitwithr.com/>
-
-## R programming 
-
-- Data as the main object
-- base R 
-- packages
-
-## Resources {.smaller background-image="figures/books.png" background-size="30%" background-position="50% 80%"}
-
--   **R for Data Science**: https://r4ds.hadley.nz/
--   **ggplot2: Elegant Graphics for Data Analysis (3e)** https://ggplot2-book.org/
--   [Stack Overflow](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50) is a great source of answers to common ggplot2 questions. It is also a great place to get help, once you have created a reproducible example that illustrates your problem.
 
 # Trick 101 to make you slightly more comfortable in R
 
@@ -168,7 +173,11 @@ click the package link
 
 # [Quarto and Rmarkdown document]{.r-fit-text}
 
+## R script and Quarto document
+
 ## Quarto
+
+YAML (required), text (optional), code (optional)
 
 write your things in a R script for programming, but mostly you will interact with RMarkdown/ Quarto document
 
@@ -191,10 +200,63 @@ File > New File > Quarto Document / R Markdown
 
 :::
 
-## About me
+## Quarto - YAML
 
-Postdoc, research on visualization, data analysis
+  * title, subtitle name, date
+  * specify output: pdf, html, fancy outputs: revealjs (how the slides are created)
+  * add latex packages for math
 
-# Use of LLMs
 
--   make up functions, old functions...
+## Quarto - text
+
+Markdown: 
+
+-  **Headings**: `# Heading 1`, `## Heading 2`, `### Heading 3`
+-  **Bold**: `**bold text**`
+-  **Italics**: `*italic text*`
+-  **Links**: `[link text](https://example.com)`
+- quote: `>`
+
+
+## Quarto - code
+
+Chunk option beginner pack: warning, messages, cache, eval, echo, fig.align: "center", fig.width, fig.height, out.width, out.height, 
+
+-  **Inline code**: `` `code` ``
+
+
+never put `install.packages(xxx)` in your Quarto/ Rmarkdown file
+
+# Project structure
+
+* Always open from the `.Rproj` file - check the top RHS
+* use `here::here()`: `read_csv(here::here("data/xxx.csv))`
+* 
+
+
+## R history and ecosystem
+
+S (Roger's week 2 slides)
+
+Base R + packages
+
+# A mature way to ask for help
+
+`reprex`
+
+# R beginner pack
+
+basic calculation: `1 + 1`
+assign `<-` and `=`
+function(arguments)
+pipe: `function2(function(arguments), arguments)`: `function(arguments) |> function2(arguments)`
+`|>` and `%>%`
+
+
+## Best practice
+
+lower_case
+
+## The big picture
+
+<center>![](figures/data-science-big-picture.png)</center>

@@ -222,6 +222,14 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <h2>Learning objectives</h2>
 <p>end goal: be comfortable to code in R to do some analysis and have enough breadth of knowledge to know where to look for things you need</p>
 </section>
+<section id="resources" class="slide level2 smaller" data-background-image="figures/books.png" data-background-size="30%" data-background-position="50% 80%">
+<h2>Resources</h2>
+<ul>
+<li><strong>R for Data Science</strong>: https://r4ds.hadley.nz/</li>
+<li><strong>ggplot2: Elegant Graphics for Data Analysis (3e)</strong> https://ggplot2-book.org/</li>
+<li><a href="https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&amp;pageSize=50">Stack Overflow</a> is a great source of answers to common ggplot2 questions. It is also a great place to get help, once you have created a reproducible example that illustrates your problem.</li>
+</ul>
+</section>
 <section id="what-you-not-learn" class="slide level2">
 <h2>What you not learn</h2>
 <ul>
@@ -231,6 +239,17 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 </section>
 <section id="why-data-science" class="slide level2">
 <h2>Why data science</h2>
+</section>
+<section id="about-me" class="slide level2">
+<h2>About me</h2>
+<p>Postdoc, research on visualization, data analysis</p>
+</section>
+<section>
+<section id="use-of-llms" class="title-slide slide level1 center">
+<h1>Use of LLMs</h1>
+<ul>
+<li>make up functions, old functions…</li>
+</ul>
 </section>
 <section id="install-r-and-rstudio" class="slide level2">
 <h2>Install R and RStudio</h2>
@@ -269,23 +288,7 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <li><a href="https://happygitwithr.com/" class="uri">https://happygitwithr.com/</a></li>
 </ul></li>
 </ul>
-</section>
-<section id="r-programming" class="slide level2">
-<h2>R programming</h2>
-<ul>
-<li>Data as the main object</li>
-<li>base R</li>
-<li>packages</li>
-</ul>
-</section>
-<section id="resources" class="slide level2 smaller" data-background-image="figures/books.png" data-background-size="30%" data-background-position="50% 80%">
-<h2>Resources</h2>
-<ul>
-<li><strong>R for Data Science</strong>: https://r4ds.hadley.nz/</li>
-<li><strong>ggplot2: Elegant Graphics for Data Analysis (3e)</strong> https://ggplot2-book.org/</li>
-<li><a href="https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&amp;pageSize=50">Stack Overflow</a> is a great source of answers to common ggplot2 questions. It is also a great place to get help, once you have created a reproducible example that illustrates your problem.</li>
-</ul>
-</section>
+</section></section>
 <section>
 <section id="trick-101-to-make-you-slightly-more-comfortable-in-r" class="title-slide slide level1 center">
 <h1>Trick 101 to make you slightly more comfortable in R</h1>
@@ -391,6 +394,7 @@ What I mean by this ▶️
 </section>
 <section id="quarto" class="slide level2">
 <h2>Quarto</h2>
+<p>YAML (required), text (optional), code (optional)</p>
 <p>write your things in a R script for programming, but mostly you will interact with RMarkdown/ Quarto document</p>
 <ul>
 <li>Quarto: you can “write/ run code” in a “Word document”: open a template and render a pdf,</li>
@@ -422,17 +426,33 @@ What I mean by this ▶️
 </div>
 </div>
 </section>
-<section id="about-me" class="slide level2">
-<h2>About me</h2>
-<p>Postdoc, research on visualization, data analysis</p>
-</section></section>
-<section id="use-of-llms" class="title-slide slide level1 center">
-<h1>Use of LLMs</h1>
+<section id="quarto---yaml" class="slide level2">
+<h2>Quarto - YAML</h2>
 <ul>
-<li>make up functions, old functions…</li>
+<li>title, subtitle name, date</li>
+<li>specify output: pdf, html, fancy outputs: revealjs (how the slides are created)</li>
+<li>add latex packages for math</li>
+</ul>
+</section>
+<section id="quarto---text" class="slide level2">
+<h2>Quarto - text</h2>
+<p>Markdown:</p>
+<ul>
+<li><strong>Headings</strong>: <code># Heading 1</code>, <code>## Heading 2</code>, <code>### Heading 3</code></li>
+<li><strong>Bold</strong>: <code>**bold text**</code></li>
+<li><strong>Italics</strong>: <code>*italic text*</code></li>
+<li><strong>Links</strong>: <code>[link text](https://example.com)</code></li>
+<li>quote: <code>&gt;</code></li>
+</ul>
+</section>
+<section id="quarto---code" class="slide level2">
+<h2>Quarto - code</h2>
+<p>Chunk option beginner pack: warning, messages, cache, eval, echo, fig.align: “center”, fig.width, fig.height, out.width, out.height,</p>
+<ul>
+<li><strong>Inline code</strong>: <code>`code`</code></li>
 </ul>
 
-</section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
