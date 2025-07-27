@@ -260,3 +260,9 @@ lower_case
 ## The big picture
 
 <center>![](figures/data-science-big-picture.png)</center>
+
+`readr`, `janitor::clean_names()`
+`tidyr`
+`dplyr`
+`ggplot2`
+`tidymodels`
