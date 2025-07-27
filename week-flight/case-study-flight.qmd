@@ -1,0 +1,204 @@
+---
+title: "Case study: analysing flight data"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> week 01 lecture 01 Fall 2025"
+format: 
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    aspectratio: 169
+    theme: serif
+    preview-links: auto
+    pdf-separate-fragments: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
+options(pillar.width = 70)
+library(tidyverse)
+```
+
+## JSM Data Challenge Expo
+
+<https://community.amstat.org/dataexpo/home>
+
+> The Annual Data Challenge Expo is jointly sponsored by three American Statistical Association (ASA) Sections – Statistical Computing, Statistical Graphics, and Government Statistics. The 2025 Data Challenge Expo will be held in conjunction with JSM 2025 in Nashville, Tennessee from August 2 - 7, 2025.
+
+## The flight data
+
+* The original data is much larger (1987 - 2024), 15 domestic US airlines, 110 variables, millions of record for a single year.
+
+. . .
+
+* We will be using a subset of it to avoid the issue with a dataset that's too large (so that hopefully you don't run into memory and session crush issues).
+
+
+## Let's look at the data {.smaller}
+
+```{r}
+flight_df <- read_csv(here::here("data/flight_df.csv"))
+flight_df
+```
+
+* Each row is a flight record - 3,000,000 records!
+
+```{r}
+unique(flight_df$Reporting_Airline)
+range(flight_df$FlightDate)
+unique(flight_df$Origin) |> length()
+```
+
+
+## Airline network
+
+<center>![](figures/airline-network.png)</center>
+
+## [Arrival and departure pattern for airport hub]{.r-fit-text} {.smaller}
+
+> Airlines may operate banks of flights at their hubs, in which several flights arrive and depart within short periods of time. The banks may be known as "peaks" of activity at the hubs and the non-banks as "valleys". Banking allows for short connection times for passengers. However, an airline must assemble many resources to cater to the influx of flights during a bank, and having several aircraft on the ground at the same time can lead to congestion and delays. In addition, banking could result in inefficient aircraft utilisation, with aircraft waiting at spoke cities for the next bank.
+Source: <https://en.wikipedia.org/wiki/Airline_hub>
+
+**Task: Can you create a/some visualization to illustrate this described “banked” pattern for flight arrival and departure?**
+
+  * In the next few slides, I will give you two levels of instruction with more hints to help you complete this task.
+
+
+
+## Level 1: Let's goooooo! {.smaller}
+
+* You may expect something like this:
+
+<center>![](figures/sample-viz.png) </center>
+
+:::footer
+Source: Computational intelligence in integrated airline scheduling, Grosche, P16
+:::
+
+## Level 2: I need training wheels (1/2) {.smaller}
+
+Decompose the task into smaller steps:
+
+  * You may want to first narrow the data down to one airline and a few airprots (e.g. AA and `c("DFW", "CLT", "ORD", "AUS", "DEN", "SLC", "ATL", "PHL")`)
+  * The `DepTime` and `ArrTime` are currently characters and you may want to convert them to a proper time class or even a datetime class to create an interval
+  
+  * We will be plotting both arrival and departure at the same time, so you may want to reshape the data into the long form where there is one column for all the departure and arrival time and one column indicating whether it is arrival or departure. 
+  
+  * Here I have the code to create blocks for you, figure out how it works to create blocks and incorporate it into your data wrangling step:
+  
+```{r eval = FALSE}
+assign_time_blocks <- function(time_vector, block_size = 10) {
+  start_time <- min(time_vector, na.rm = TRUE)
+  block_start <- start_time + floor(as.numeric(difftime(time_vector, start_time, units = "mins")) / block_size) * block_size * 60
+  return(block_start)
+}
+```
+
+## Level 3: I need training wheels (2/2) {.smaller}
+  
+  * Then count the number of flights in each time block for each airline/ airport pair and inverse the arrival time to plot it below zero
+  
+  * Find the right `geom` to plot the count of flights in each time block for each airline/ airport pair and consider the following:
+    * Do you need `facets`?
+    * Do you need to adjust the x-axis to format the time better? 
+    * Can you adjust the theme, x-label, and y-label to make the plot more readable?
+  
+## Solution (1/2) {.smaller}
+
+```{r}
+#| label: solution-1
+#| code-line-numbers: true
+#| fig-align: center
+#| output-location: default
+assign_time_blocks <- function(time_vector, block_size = 10) {
+  start_time <- min(time_vector, na.rm = TRUE)
+  block_start <- start_time + floor(as.numeric(difftime(time_vector, start_time, units = "mins")) / block_size) * block_size * 60
+  return(block_start)
+}
+airport_vec <- c("DFW", "CLT", "ORD", "AUS", "DEN", "SLC", "ATL", "PHL")
+airline <- c("AA")
+flight_df |>
+  filter(!is.na(DepTime), !is.na(ArrTime)) |>
+  dplyr::filter((Origin == airport_vec | Dest == airport_vec), 
+                Reporting_Airline == "AA") |>
+  mutate(DepTime = as_datetime(paste0("2019-01-01", "-", DepTime, "-00")),
+         ArrTime = as_datetime(paste0("2019-01-01", "-", ArrTime, "-00"))) |>
+  rename(dep_time = DepTime, arr_time = ArrTime,
+         dep_airport = Origin, arr_airport = Dest,
+         airline = Reporting_Airline) |>
+  pivot_longer(cols = -c(FlightDate, airline),
+               names_to = c("type", ".value"), names_sep = "_") |>
+  dplyr::filter(airport %in% airport_vec) |>
+  mutate(block = assign_time_blocks(time, 10)) |>
+    count(airline, airport, type, block) |>
+    mutate(airline_airport = paste(airline, airport, sep = "/ ")) |>
+    mutate(n = ifelse(type == "dep", n, -n))
+```
+
+`r flipbookr:::chunq_reveal("solution-1", lcolw = "40", rcolw = "60", smallcode = TRUE)`
+
+## Solution (2/2) {.smaller}
+
+```{r echo = FALSE}
+flight_clean <- flight_df |>
+  filter(!is.na(DepTime), !is.na(ArrTime)) |>
+  dplyr::filter((Origin == airport_vec | Dest == airport_vec), 
+                Reporting_Airline == "AA") |>
+  mutate(DepTime = as_datetime(paste0("2019-01-01", "-", DepTime, "-00")),
+         ArrTime = as_datetime(paste0("2019-01-01", "-", ArrTime, "-00"))) |>
+  rename(dep_time = DepTime, arr_time = ArrTime,
+         dep_airport = Origin, arr_airport = Dest,
+         airline = Reporting_Airline) |>
+  pivot_longer(cols = -c(FlightDate, airline),
+               names_to = c("type", ".value"), names_sep = "_") |>
+  dplyr::filter(airport %in% airport_vec) |>
+  mutate(block = assign_time_blocks(time, 10)) |>
+    count(airline, airport, type, block) |>
+    mutate(airline_airport = paste(airline, airport, sep = "/ ")) |>
+    mutate(n = ifelse(type == "dep", n, -n))
+```
+
+
+```{r}
+#| label: solution-2
+#| code-line-numbers: true
+#| fig-align: center
+flight_clean |>
+  ggplot(aes(x = block, 
+             y = n, color = type, fill = type)) +
+  geom_col() +
+  facet_wrap(vars(airline_airport), scales = "free_y", ncol = 2) +
+  scale_x_datetime(date_labels =  "%H:%M", date_breaks = "4 hour") +
+  theme_minimal() +
+  theme(aspect.ratio = 0.2) + 
+  xlab("Time of the date") +
+  ylab("Count")
+```
+
+`r flipbookr:::chunq_reveal("solution-2", lcolw = "40", rcolw = "60")`
+
+
+## Summary {.smaller}
+
+We have a practical session to chain a few components we have learnt so far together: 
+
+:::{.fragment}
+
+  * basic `dplyr` verbs (`filter()`, `mutate()`, `rename()`, `count()`) for data wrangling
+  * `tidyr::pivot_longer()` to reshape the data
+  * `ggplot2` for plotting
+  * temporal data specific:
+    * `lubridate: as_datetime()` to format arrival and departure dates,
+    * `ggplot2::scale_x_datetime()` to format the date-time 
+  
+:::
+
+## Summary {.smaller}
+
+* Again, what I hope you get the most out of this class is to be comfortable with wrangling and plotting data with R. 
+
+. . .
+
+* In practice, a lot of the work is to think about how to translate what you want to do into `tidyverse` commands, e.g. 
+  * narrow down to particular airline/ airport becomes `filter()` on the rows.
+  * we want to compute/ plot arrival and departure together, so we need to reshape the data into long format with `pivot_longer()`
+  * ...

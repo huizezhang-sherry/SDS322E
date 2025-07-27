@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="case-study-flight_files/libs/clipboard/clipboard.min.js"></script>
+<script src="case-study-flight_files/libs/quarto-html/tabby.min.js"></script>
+<script src="case-study-flight_files/libs/quarto-html/popper.min.js"></script>
+<script src="case-study-flight_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="case-study-flight_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="case-study-flight_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="case-study-flight_files/libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.30">
+
+  <meta name="author" content="H. Sherry Zhang   Department of Statistics and Data Sciences   The University of Texas at Austin     week 01 lecture 01 Fall 2025">
+  <title>Case study: analysing flight data</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="case-study-flight_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="case-study-flight_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="case-study-flight_files/libs/revealjs/dist/theme/quarto-816793a8a4a837d14f6ea458e2f1c5cb.css">
+  <link href="case-study-flight_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="case-study-flight_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="case-study-flight_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="case-study-flight_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Case study: analysing flight data</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br> <br> week 01 lecture 01 Fall 2025 
+</div>
+</div>
+</div>
+
+</section>
+<section id="jsm-data-challenge-expo" class="slide level2">
+<h2>JSM Data Challenge Expo</h2>
+<p><a href="https://community.amstat.org/dataexpo/home" class="uri">https://community.amstat.org/dataexpo/home</a></p>
+<blockquote>
+<p>The Annual Data Challenge Expo is jointly sponsored by three American Statistical Association (ASA) Sections – Statistical Computing, Statistical Graphics, and Government Statistics. The 2025 Data Challenge Expo will be held in conjunction with JSM 2025 in Nashville, Tennessee from August 2 - 7, 2025.</p>
+</blockquote>
+</section>
+<section id="the-flight-data" class="slide level2">
+<h2>The flight data</h2>
+<ul>
+<li><p>The original data is much larger (1987 - 2024), all the domestic US airlines, 110 variables, millions of record for a single year.</p></li>
+<li><p>We will be using a subset of it to avoid the issue with a dataset that’s too large (so that you don’t run into memory and session crush issue too often)</p></li>
+</ul>
+</section>
+<section id="lets-look-at-the-data" class="slide level2 smaller">
+<h2>Let’s look at the data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>flight_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/flight_df.csv"</span>))</span>
+<span id="cb1-2"><a href=""></a>flight_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13,479,594 × 6
+   Reporting_Airline FlightDate DepTime ArrTime Origin Dest 
+   &lt;chr&gt;             &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;
+ 1 AA                2019-01-01 0003    0504    LAX    DFW  
+ 2 AA                2019-01-01 0003    0150    CLT    PBI  
+ 3 AA                2019-01-01 0004    0912    OGG    PHX  
+ 4 AA                2019-01-01 0005    0723    LAX    ATL  
+ 5 AA                2019-01-01 0011    0832    SFO    MIA  
+ 6 AA                2019-01-01 0014    0224    PHX    SEA  
+ 7 AA                2019-01-01 0014    0543    PHX    CLT  
+ 8 AA                2019-01-01 0015    0333    DFW    MCO  
+ 9 AA                2019-01-01 0015    0346    DFW    MIA  
+10 AA                2019-01-01 0015    0108    PHX    RNO  
+# ℹ 13,479,584 more rows</code></pre>
+</div>
+</div>
+<ul>
+<li>Each row is a flight record - 3,000,000 records!</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">unique</span>(flight_df<span class="sc">$</span>Reporting_Airline)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "AA" "DL" "UA" "WN"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="fu">range</span>(flight_df<span class="sc">$</span>FlightDate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2019-01-01" "2023-12-31"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="fu">unique</span>(flight_df<span class="sc">$</span>Origin) <span class="sc">|&gt;</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 186</code></pre>
+</div>
+</div>
+</section>
+<section id="airline-network" class="slide level2">
+<h2>Airline network</h2>
+<center>
+<img data-src="figures/airline-network.png">
+</center>
+</section>
+<section id="arrival-and-departure-pattern-for-airport-hub" class="slide level2 smaller">
+<h2><span class="r-fit-text">Arrival and departure pattern for airport hub</span></h2>
+<blockquote>
+<p>Airlines may operate banks of flights at their hubs, in which several flights arrive and depart within short periods of time. The banks may be known as “peaks” of activity at the hubs and the non-banks as “valleys”. Banking allows for short connection times for passengers. However, an airline must assemble many resources to cater to the influx of flights during a bank, and having several aircraft on the ground at the same time can lead to congestion and delays. In addition, banking could result in inefficient aircraft utilisation, with aircraft waiting at spoke cities for the next bank. Source: <a href="https://en.wikipedia.org/wiki/Airline_hub" class="uri">https://en.wikipedia.org/wiki/Airline_hub</a></p>
+</blockquote>
+<p><strong>Task: Can you create a/some visualization to illustrate this described “banked” pattern for flight arrival and departure?</strong></p>
+<ul>
+<li>In the next few slides, I will give you two levels of instruction with more hints to help you complete this task.</li>
+</ul>
+</section>
+<section id="level-1-lets-goooooo" class="slide level2 smaller">
+<h2>Level 1: Let’s goooooo!</h2>
+<ul>
+<li>You may expect something like this:</li>
+</ul>
+<center>
+<img data-src="figures/sample-viz.png">
+</center>
+<div class="footer">
+<p>Source: Computational intelligence in integrated airline scheduling, Grosche, P16</p>
+</div>
+</section>
+<section id="level-2-i-need-training-wheels-12" class="slide level2 smaller">
+<h2>Level 2: I need training wheels (1/2)</h2>
+<p>Decompose the task into smaller steps:</p>
+<ul>
+<li><p>You may want to first narrow the data down to one airline and a few airprots (e.g.&nbsp;AA and <code>c("DFW", "CLT", "ORD", "AUS", "DEN", "SLC", "ATL", "PHL")</code>)</p></li>
+<li><p>The <code>DepTime</code> and <code>ArrTime</code> are currently characters and you may want to convert them to a proper time class or even a datetime class to create an interval</p></li>
+<li><p>We will be plotting both arrival and departure at the same time, so you may want to reshape the data into the long form where there is one column for all the departure and arrival time and one column indicating whether it is arrival or departure.</p></li>
+<li><p>Here I have the code to create blocks for you, figure out how it works to create blocks and incorporate it into your data wrangling step:</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb9-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb9-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb9-5"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="level-3-i-need-training-wheels-22" class="slide level2 smaller">
+<h2>Level 3: I need training wheels (2/2)</h2>
+<ul>
+<li><p>Then count the number of flights in each time block for each airline/ airport pair and inverse the arrival time to plot it below zero</p></li>
+<li><p>Find the right <code>geom</code> to plot the count of flights in each time block for each airline/ airport pair and consider the following:</p>
+<ul>
+<li>Do you need <code>facets</code>?</li>
+<li>Do you need to adjust the x-axis to format the time better?</li>
+<li>Can you adjust the theme, x-label, and y-label to make the plot more readable?</li>
+</ul></li>
+</ul>
+</section>
+<section id="solution-12" class="slide level2 smaller">
+<h2>Solution (1/2)</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb10-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb10-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb10-5"><a href=""></a>}</span>
+<span id="cb10-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb10-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb10-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb10-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb10-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec), </span>
+<span id="cb10-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-12"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">DepTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, DepTime, <span class="st">"-00"</span>)),</span>
+<span id="cb10-13"><a href=""></a>         <span class="at">ArrTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, ArrTime, <span class="st">"-00"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb10-14"><a href=""></a>  <span class="fu">rename</span>(<span class="at">dep_time =</span> DepTime, <span class="at">arr_time =</span> ArrTime,</span>
+<span id="cb10-15"><a href=""></a>         <span class="at">dep_airport =</span> Origin, <span class="at">arr_airport =</span> Dest,</span>
+<span id="cb10-16"><a href=""></a>         <span class="at">airline =</span> Reporting_Airline) <span class="sc">|&gt;</span></span>
+<span id="cb10-17"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(FlightDate, airline),</span>
+<span id="cb10-18"><a href=""></a>               <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"type"</span>, <span class="st">".value"</span>), <span class="at">names_sep =</span> <span class="st">"_"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-19"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(airport <span class="sc">%in%</span> airport_vec) <span class="sc">|&gt;</span></span>
+<span id="cb10-20"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">block =</span> <span class="fu">assign_time_blocks</span>(time, <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-21"><a href=""></a>    <span class="fu">count</span>(airline, airport, type, block) <span class="sc">|&gt;</span></span>
+<span id="cb10-22"><a href=""></a>    <span class="fu">mutate</span>(<span class="at">airline_airport =</span> <span class="fu">paste</span>(airline, airport, <span class="at">sep =</span> <span class="st">"/ "</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-23"><a href=""></a>    <span class="fu">mutate</span>(<span class="at">n =</span> <span class="fu">ifelse</span>(type <span class="sc">==</span> <span class="st">"dep"</span>, n, <span class="sc">-</span>n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2,100 × 6
+   airline airport type  block                   n airline_airport
+   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;dttm&gt;              &lt;int&gt; &lt;chr&gt;          
+ 1 AA      ATL     arr   2019-01-01 00:01:00   -95 AA/ ATL        
+ 2 AA      ATL     arr   2019-01-01 00:11:00   -54 AA/ ATL        
+ 3 AA      ATL     arr   2019-01-01 00:21:00   -63 AA/ ATL        
+ 4 AA      ATL     arr   2019-01-01 00:31:00   -47 AA/ ATL        
+ 5 AA      ATL     arr   2019-01-01 00:41:00   -21 AA/ ATL        
+ 6 AA      ATL     arr   2019-01-01 00:51:00   -32 AA/ ATL        
+ 7 AA      ATL     arr   2019-01-01 01:01:00   -23 AA/ ATL        
+ 8 AA      ATL     arr   2019-01-01 01:11:00   -15 AA/ ATL        
+ 9 AA      ATL     arr   2019-01-01 01:21:00   -18 AA/ ATL        
+10 AA      ATL     arr   2019-01-01 01:31:00    -8 AA/ ATL        
+# ℹ 2,090 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="section" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb12-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb12-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb12-5"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+
+</div></div>
+</section>
+<section id="section-1" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb13-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb13-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb13-5"><a href=""></a>}</span>
+<span id="cb13-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+
+</div></div>
+</section>
+<section id="section-2" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb14-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb14-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb14-5"><a href=""></a>}</span>
+<span id="cb14-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb14-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+
+</div></div>
+</section>
+<section id="section-3" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb15-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb15-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb15-5"><a href=""></a>}</span>
+<span id="cb15-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb15-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb15-8"><a href=""></a>flight_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13,479,594 × 6
+   Reporting_Airline FlightDate DepTime ArrTime Origin Dest 
+   &lt;chr&gt;             &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;
+ 1 AA                2019-01-01 0003    0504    LAX    DFW  
+ 2 AA                2019-01-01 0003    0150    CLT    PBI  
+ 3 AA                2019-01-01 0004    0912    OGG    PHX  
+ 4 AA                2019-01-01 0005    0723    LAX    ATL  
+ 5 AA                2019-01-01 0011    0832    SFO    MIA  
+ 6 AA                2019-01-01 0014    0224    PHX    SEA  
+ 7 AA                2019-01-01 0014    0543    PHX    CLT  
+ 8 AA                2019-01-01 0015    0333    DFW    MCO  
+ 9 AA                2019-01-01 0015    0346    DFW    MIA  
+10 AA                2019-01-01 0015    0108    PHX    RNO  
+# ℹ 13,479,584 more rows</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-4" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb17-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb17-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb17-5"><a href=""></a>}</span>
+<span id="cb17-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb17-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb17-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb17-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13,176,708 × 6
+   Reporting_Airline FlightDate DepTime ArrTime Origin Dest 
+   &lt;chr&gt;             &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;
+ 1 AA                2019-01-01 0003    0504    LAX    DFW  
+ 2 AA                2019-01-01 0003    0150    CLT    PBI  
+ 3 AA                2019-01-01 0004    0912    OGG    PHX  
+ 4 AA                2019-01-01 0005    0723    LAX    ATL  
+ 5 AA                2019-01-01 0011    0832    SFO    MIA  
+ 6 AA                2019-01-01 0014    0224    PHX    SEA  
+ 7 AA                2019-01-01 0014    0543    PHX    CLT  
+ 8 AA                2019-01-01 0015    0333    DFW    MCO  
+ 9 AA                2019-01-01 0015    0346    DFW    MIA  
+10 AA                2019-01-01 0015    0108    PHX    RNO  
+# ℹ 13,176,698 more rows</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-5" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb19-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb19-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb19-5"><a href=""></a>}</span>
+<span id="cb19-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb19-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb19-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb19-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb19-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec),</span>
+<span id="cb19-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 427,098 × 6
+   Reporting_Airline FlightDate DepTime ArrTime Origin Dest 
+   &lt;chr&gt;             &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;
+ 1 AA                2019-01-01 0003    0504    LAX    DFW  
+ 2 AA                2019-01-01 0003    0150    CLT    PBI  
+ 3 AA                2019-01-01 0015    0346    DFW    MIA  
+ 4 AA                2019-01-01 0052    0515    LAS    DFW  
+ 5 AA                2019-01-01 0459    1118    SLC    PHL  
+ 6 AA                2019-01-01 0459    1245    SFO    CLT  
+ 7 AA                2019-01-01 0501    1051    SEA    ORD  
+ 8 AA                2019-01-01 0515    0800    ELP    DFW  
+ 9 AA                2019-01-01 0526    1122    SEA    DFW  
+10 AA                2019-01-01 0533    0925    LGA    DFW  
+# ℹ 427,088 more rows</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-6" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb21-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb21-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb21-5"><a href=""></a>}</span>
+<span id="cb21-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb21-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb21-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb21-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb21-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec),</span>
+<span id="cb21-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-12"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">DepTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, DepTime, <span class="st">"-00"</span>)),</span>
+<span id="cb21-13"><a href=""></a>         <span class="at">ArrTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, ArrTime, <span class="st">"-00"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 427,098 × 6
+   Reporting_Airline FlightDate DepTime            
+   &lt;chr&gt;             &lt;date&gt;     &lt;dttm&gt;             
+ 1 AA                2019-01-01 2019-01-01 00:03:00
+ 2 AA                2019-01-01 2019-01-01 00:03:00
+ 3 AA                2019-01-01 2019-01-01 00:15:00
+ 4 AA                2019-01-01 2019-01-01 00:52:00
+ 5 AA                2019-01-01 2019-01-01 04:59:00
+ 6 AA                2019-01-01 2019-01-01 04:59:00
+ 7 AA                2019-01-01 2019-01-01 05:01:00
+ 8 AA                2019-01-01 2019-01-01 05:15:00
+ 9 AA                2019-01-01 2019-01-01 05:26:00
+10 AA                2019-01-01 2019-01-01 05:33:00
+# ℹ 427,088 more rows
+# ℹ 3 more variables: ArrTime &lt;dttm&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-7" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb23-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb23-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb23-5"><a href=""></a>}</span>
+<span id="cb23-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb23-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb23-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb23-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb23-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec),</span>
+<span id="cb23-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-12"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">DepTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, DepTime, <span class="st">"-00"</span>)),</span>
+<span id="cb23-13"><a href=""></a>         <span class="at">ArrTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, ArrTime, <span class="st">"-00"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb23-14"><a href=""></a>  <span class="fu">rename</span>(<span class="at">dep_time =</span> DepTime, <span class="at">arr_time =</span> ArrTime,</span>
+<span id="cb23-15"><a href=""></a>         <span class="at">dep_airport =</span> Origin, <span class="at">arr_airport =</span> Dest,</span>
+<span id="cb23-16"><a href=""></a>         <span class="at">airline =</span> Reporting_Airline)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 427,098 × 6
+   airline FlightDate dep_time            arr_time           
+   &lt;chr&gt;   &lt;date&gt;     &lt;dttm&gt;              &lt;dttm&gt;             
+ 1 AA      2019-01-01 2019-01-01 00:03:00 2019-01-01 05:04:00
+ 2 AA      2019-01-01 2019-01-01 00:03:00 2019-01-01 01:50:00
+ 3 AA      2019-01-01 2019-01-01 00:15:00 2019-01-01 03:46:00
+ 4 AA      2019-01-01 2019-01-01 00:52:00 2019-01-01 05:15:00
+ 5 AA      2019-01-01 2019-01-01 04:59:00 2019-01-01 11:18:00
+ 6 AA      2019-01-01 2019-01-01 04:59:00 2019-01-01 12:45:00
+ 7 AA      2019-01-01 2019-01-01 05:01:00 2019-01-01 10:51:00
+ 8 AA      2019-01-01 2019-01-01 05:15:00 2019-01-01 08:00:00
+ 9 AA      2019-01-01 2019-01-01 05:26:00 2019-01-01 11:22:00
+10 AA      2019-01-01 2019-01-01 05:33:00 2019-01-01 09:25:00
+# ℹ 427,088 more rows
+# ℹ 2 more variables: dep_airport &lt;chr&gt;, arr_airport &lt;chr&gt;</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-8" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb25-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb25-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb25-5"><a href=""></a>}</span>
+<span id="cb25-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb25-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb25-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb25-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb25-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec),</span>
+<span id="cb25-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-12"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">DepTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, DepTime, <span class="st">"-00"</span>)),</span>
+<span id="cb25-13"><a href=""></a>         <span class="at">ArrTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, ArrTime, <span class="st">"-00"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb25-14"><a href=""></a>  <span class="fu">rename</span>(<span class="at">dep_time =</span> DepTime, <span class="at">arr_time =</span> ArrTime,</span>
+<span id="cb25-15"><a href=""></a>         <span class="at">dep_airport =</span> Origin, <span class="at">arr_airport =</span> Dest,</span>
+<span id="cb25-16"><a href=""></a>         <span class="at">airline =</span> Reporting_Airline) <span class="sc">|&gt;</span></span>
+<span id="cb25-17"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(FlightDate, airline),</span>
+<span id="cb25-18"><a href=""></a>               <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"type"</span>, <span class="st">".value"</span>), <span class="at">names_sep =</span> <span class="st">"_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 854,196 × 5
+   airline FlightDate type  time                airport
+   &lt;chr&gt;   &lt;date&gt;     &lt;chr&gt; &lt;dttm&gt;              &lt;chr&gt;  
+ 1 AA      2019-01-01 dep   2019-01-01 00:03:00 LAX    
+ 2 AA      2019-01-01 arr   2019-01-01 05:04:00 DFW    
+ 3 AA      2019-01-01 dep   2019-01-01 00:03:00 CLT    
+ 4 AA      2019-01-01 arr   2019-01-01 01:50:00 PBI    
+ 5 AA      2019-01-01 dep   2019-01-01 00:15:00 DFW    
+ 6 AA      2019-01-01 arr   2019-01-01 03:46:00 MIA    
+ 7 AA      2019-01-01 dep   2019-01-01 00:52:00 LAS    
+ 8 AA      2019-01-01 arr   2019-01-01 05:15:00 DFW    
+ 9 AA      2019-01-01 dep   2019-01-01 04:59:00 SLC    
+10 AA      2019-01-01 arr   2019-01-01 11:18:00 PHL    
+# ℹ 854,186 more rows</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-9" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb27-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb27-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb27-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb27-5"><a href=""></a>}</span>
+<span id="cb27-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb27-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb27-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb27-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb27-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec),</span>
+<span id="cb27-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-12"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">DepTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, DepTime, <span class="st">"-00"</span>)),</span>
+<span id="cb27-13"><a href=""></a>         <span class="at">ArrTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, ArrTime, <span class="st">"-00"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb27-14"><a href=""></a>  <span class="fu">rename</span>(<span class="at">dep_time =</span> DepTime, <span class="at">arr_time =</span> ArrTime,</span>
+<span id="cb27-15"><a href=""></a>         <span class="at">dep_airport =</span> Origin, <span class="at">arr_airport =</span> Dest,</span>
+<span id="cb27-16"><a href=""></a>         <span class="at">airline =</span> Reporting_Airline) <span class="sc">|&gt;</span></span>
+<span id="cb27-17"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(FlightDate, airline),</span>
+<span id="cb27-18"><a href=""></a>               <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"type"</span>, <span class="st">".value"</span>), <span class="at">names_sep =</span> <span class="st">"_"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-19"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(airport <span class="sc">%in%</span> airport_vec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 523,005 × 5
+   airline FlightDate type  time                airport
+   &lt;chr&gt;   &lt;date&gt;     &lt;chr&gt; &lt;dttm&gt;              &lt;chr&gt;  
+ 1 AA      2019-01-01 arr   2019-01-01 05:04:00 DFW    
+ 2 AA      2019-01-01 dep   2019-01-01 00:03:00 CLT    
+ 3 AA      2019-01-01 dep   2019-01-01 00:15:00 DFW    
+ 4 AA      2019-01-01 arr   2019-01-01 05:15:00 DFW    
+ 5 AA      2019-01-01 dep   2019-01-01 04:59:00 SLC    
+ 6 AA      2019-01-01 arr   2019-01-01 11:18:00 PHL    
+ 7 AA      2019-01-01 arr   2019-01-01 12:45:00 CLT    
+ 8 AA      2019-01-01 arr   2019-01-01 10:51:00 ORD    
+ 9 AA      2019-01-01 arr   2019-01-01 08:00:00 DFW    
+10 AA      2019-01-01 arr   2019-01-01 11:22:00 DFW    
+# ℹ 522,995 more rows</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-10" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb29-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb29-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb29-5"><a href=""></a>}</span>
+<span id="cb29-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb29-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb29-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb29-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb29-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec),</span>
+<span id="cb29-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-12"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">DepTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, DepTime, <span class="st">"-00"</span>)),</span>
+<span id="cb29-13"><a href=""></a>         <span class="at">ArrTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, ArrTime, <span class="st">"-00"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb29-14"><a href=""></a>  <span class="fu">rename</span>(<span class="at">dep_time =</span> DepTime, <span class="at">arr_time =</span> ArrTime,</span>
+<span id="cb29-15"><a href=""></a>         <span class="at">dep_airport =</span> Origin, <span class="at">arr_airport =</span> Dest,</span>
+<span id="cb29-16"><a href=""></a>         <span class="at">airline =</span> Reporting_Airline) <span class="sc">|&gt;</span></span>
+<span id="cb29-17"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(FlightDate, airline),</span>
+<span id="cb29-18"><a href=""></a>               <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"type"</span>, <span class="st">".value"</span>), <span class="at">names_sep =</span> <span class="st">"_"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-19"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(airport <span class="sc">%in%</span> airport_vec) <span class="sc">|&gt;</span></span>
+<span id="cb29-20"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">block =</span> <span class="fu">assign_time_blocks</span>(time, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 523,005 × 6
+   airline FlightDate type  time                airport
+   &lt;chr&gt;   &lt;date&gt;     &lt;chr&gt; &lt;dttm&gt;              &lt;chr&gt;  
+ 1 AA      2019-01-01 arr   2019-01-01 05:04:00 DFW    
+ 2 AA      2019-01-01 dep   2019-01-01 00:03:00 CLT    
+ 3 AA      2019-01-01 dep   2019-01-01 00:15:00 DFW    
+ 4 AA      2019-01-01 arr   2019-01-01 05:15:00 DFW    
+ 5 AA      2019-01-01 dep   2019-01-01 04:59:00 SLC    
+ 6 AA      2019-01-01 arr   2019-01-01 11:18:00 PHL    
+ 7 AA      2019-01-01 arr   2019-01-01 12:45:00 CLT    
+ 8 AA      2019-01-01 arr   2019-01-01 10:51:00 ORD    
+ 9 AA      2019-01-01 arr   2019-01-01 08:00:00 DFW    
+10 AA      2019-01-01 arr   2019-01-01 11:22:00 DFW    
+# ℹ 522,995 more rows
+# ℹ 1 more variable: block &lt;dttm&gt;</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-11" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb31-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb31-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb31-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb31-5"><a href=""></a>}</span>
+<span id="cb31-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb31-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb31-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb31-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb31-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec),</span>
+<span id="cb31-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-12"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">DepTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, DepTime, <span class="st">"-00"</span>)),</span>
+<span id="cb31-13"><a href=""></a>         <span class="at">ArrTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, ArrTime, <span class="st">"-00"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb31-14"><a href=""></a>  <span class="fu">rename</span>(<span class="at">dep_time =</span> DepTime, <span class="at">arr_time =</span> ArrTime,</span>
+<span id="cb31-15"><a href=""></a>         <span class="at">dep_airport =</span> Origin, <span class="at">arr_airport =</span> Dest,</span>
+<span id="cb31-16"><a href=""></a>         <span class="at">airline =</span> Reporting_Airline) <span class="sc">|&gt;</span></span>
+<span id="cb31-17"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(FlightDate, airline),</span>
+<span id="cb31-18"><a href=""></a>               <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"type"</span>, <span class="st">".value"</span>), <span class="at">names_sep =</span> <span class="st">"_"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-19"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(airport <span class="sc">%in%</span> airport_vec) <span class="sc">|&gt;</span></span>
+<span id="cb31-20"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">block =</span> <span class="fu">assign_time_blocks</span>(time, <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb31-21"><a href=""></a>    <span class="fu">count</span>(airline, airport, type, block)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2,100 × 5
+   airline airport type  block                   n
+   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;dttm&gt;              &lt;int&gt;
+ 1 AA      ATL     arr   2019-01-01 00:01:00    95
+ 2 AA      ATL     arr   2019-01-01 00:11:00    54
+ 3 AA      ATL     arr   2019-01-01 00:21:00    63
+ 4 AA      ATL     arr   2019-01-01 00:31:00    47
+ 5 AA      ATL     arr   2019-01-01 00:41:00    21
+ 6 AA      ATL     arr   2019-01-01 00:51:00    32
+ 7 AA      ATL     arr   2019-01-01 01:01:00    23
+ 8 AA      ATL     arr   2019-01-01 01:11:00    15
+ 9 AA      ATL     arr   2019-01-01 01:21:00    18
+10 AA      ATL     arr   2019-01-01 01:31:00     8
+# ℹ 2,090 more rows</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-12" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb33-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb33-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb33-5"><a href=""></a>}</span>
+<span id="cb33-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb33-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb33-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb33-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb33-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec),</span>
+<span id="cb33-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-12"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">DepTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, DepTime, <span class="st">"-00"</span>)),</span>
+<span id="cb33-13"><a href=""></a>         <span class="at">ArrTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, ArrTime, <span class="st">"-00"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb33-14"><a href=""></a>  <span class="fu">rename</span>(<span class="at">dep_time =</span> DepTime, <span class="at">arr_time =</span> ArrTime,</span>
+<span id="cb33-15"><a href=""></a>         <span class="at">dep_airport =</span> Origin, <span class="at">arr_airport =</span> Dest,</span>
+<span id="cb33-16"><a href=""></a>         <span class="at">airline =</span> Reporting_Airline) <span class="sc">|&gt;</span></span>
+<span id="cb33-17"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(FlightDate, airline),</span>
+<span id="cb33-18"><a href=""></a>               <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"type"</span>, <span class="st">".value"</span>), <span class="at">names_sep =</span> <span class="st">"_"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-19"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(airport <span class="sc">%in%</span> airport_vec) <span class="sc">|&gt;</span></span>
+<span id="cb33-20"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">block =</span> <span class="fu">assign_time_blocks</span>(time, <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb33-21"><a href=""></a>    <span class="fu">count</span>(airline, airport, type, block) <span class="sc">|&gt;</span></span>
+<span id="cb33-22"><a href=""></a>    <span class="fu">mutate</span>(<span class="at">airline_airport =</span> <span class="fu">paste</span>(airline, airport, <span class="at">sep =</span> <span class="st">"/ "</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2,100 × 6
+   airline airport type  block                   n airline_airport
+   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;dttm&gt;              &lt;int&gt; &lt;chr&gt;          
+ 1 AA      ATL     arr   2019-01-01 00:01:00    95 AA/ ATL        
+ 2 AA      ATL     arr   2019-01-01 00:11:00    54 AA/ ATL        
+ 3 AA      ATL     arr   2019-01-01 00:21:00    63 AA/ ATL        
+ 4 AA      ATL     arr   2019-01-01 00:31:00    47 AA/ ATL        
+ 5 AA      ATL     arr   2019-01-01 00:41:00    21 AA/ ATL        
+ 6 AA      ATL     arr   2019-01-01 00:51:00    32 AA/ ATL        
+ 7 AA      ATL     arr   2019-01-01 01:01:00    23 AA/ ATL        
+ 8 AA      ATL     arr   2019-01-01 01:11:00    15 AA/ ATL        
+ 9 AA      ATL     arr   2019-01-01 01:21:00    18 AA/ ATL        
+10 AA      ATL     arr   2019-01-01 01:31:00     8 AA/ ATL        
+# ℹ 2,090 more rows</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-13" class="slide level2">
+<h2></h2>
+<div class="columns smallcode">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>assign_time_blocks <span class="ot">&lt;-</span> <span class="cf">function</span>(time_vector, <span class="at">block_size =</span> <span class="dv">10</span>) {</span>
+<span id="cb35-2"><a href=""></a>  start_time <span class="ot">&lt;-</span> <span class="fu">min</span>(time_vector, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-3"><a href=""></a>  block_start <span class="ot">&lt;-</span> start_time <span class="sc">+</span> <span class="fu">floor</span>(<span class="fu">as.numeric</span>(<span class="fu">difftime</span>(time_vector, start_time, <span class="at">units =</span> <span class="st">"mins"</span>)) <span class="sc">/</span> block_size) <span class="sc">*</span> block_size <span class="sc">*</span> <span class="dv">60</span></span>
+<span id="cb35-4"><a href=""></a>  <span class="fu">return</span>(block_start)</span>
+<span id="cb35-5"><a href=""></a>}</span>
+<span id="cb35-6"><a href=""></a>airport_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"DFW"</span>, <span class="st">"CLT"</span>, <span class="st">"ORD"</span>, <span class="st">"AUS"</span>, <span class="st">"DEN"</span>, <span class="st">"SLC"</span>, <span class="st">"ATL"</span>, <span class="st">"PHL"</span>)</span>
+<span id="cb35-7"><a href=""></a>airline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AA"</span>)</span>
+<span id="cb35-8"><a href=""></a>flight_df <span class="sc">|&gt;</span></span>
+<span id="cb35-9"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DepTime), <span class="sc">!</span><span class="fu">is.na</span>(ArrTime)) <span class="sc">|&gt;</span></span>
+<span id="cb35-10"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>((Origin <span class="sc">==</span> airport_vec <span class="sc">|</span> Dest <span class="sc">==</span> airport_vec),</span>
+<span id="cb35-11"><a href=""></a>                Reporting_Airline <span class="sc">==</span> <span class="st">"AA"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-12"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">DepTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, DepTime, <span class="st">"-00"</span>)),</span>
+<span id="cb35-13"><a href=""></a>         <span class="at">ArrTime =</span> <span class="fu">as_datetime</span>(<span class="fu">paste0</span>(<span class="st">"2019-01-01"</span>, <span class="st">"-"</span>, ArrTime, <span class="st">"-00"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb35-14"><a href=""></a>  <span class="fu">rename</span>(<span class="at">dep_time =</span> DepTime, <span class="at">arr_time =</span> ArrTime,</span>
+<span id="cb35-15"><a href=""></a>         <span class="at">dep_airport =</span> Origin, <span class="at">arr_airport =</span> Dest,</span>
+<span id="cb35-16"><a href=""></a>         <span class="at">airline =</span> Reporting_Airline) <span class="sc">|&gt;</span></span>
+<span id="cb35-17"><a href=""></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(FlightDate, airline),</span>
+<span id="cb35-18"><a href=""></a>               <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"type"</span>, <span class="st">".value"</span>), <span class="at">names_sep =</span> <span class="st">"_"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-19"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(airport <span class="sc">%in%</span> airport_vec) <span class="sc">|&gt;</span></span>
+<span id="cb35-20"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">block =</span> <span class="fu">assign_time_blocks</span>(time, <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb35-21"><a href=""></a>    <span class="fu">count</span>(airline, airport, type, block) <span class="sc">|&gt;</span></span>
+<span id="cb35-22"><a href=""></a>    <span class="fu">mutate</span>(<span class="at">airline_airport =</span> <span class="fu">paste</span>(airline, airport, <span class="at">sep =</span> <span class="st">"/ "</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb35-23"><a href=""></a>    <span class="fu">mutate</span>(<span class="at">n =</span> <span class="fu">ifelse</span>(type <span class="sc">==</span> <span class="st">"dep"</span>, n, <span class="sc">-</span>n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2,100 × 6
+   airline airport type  block                   n airline_airport
+   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;dttm&gt;              &lt;int&gt; &lt;chr&gt;          
+ 1 AA      ATL     arr   2019-01-01 00:01:00   -95 AA/ ATL        
+ 2 AA      ATL     arr   2019-01-01 00:11:00   -54 AA/ ATL        
+ 3 AA      ATL     arr   2019-01-01 00:21:00   -63 AA/ ATL        
+ 4 AA      ATL     arr   2019-01-01 00:31:00   -47 AA/ ATL        
+ 5 AA      ATL     arr   2019-01-01 00:41:00   -21 AA/ ATL        
+ 6 AA      ATL     arr   2019-01-01 00:51:00   -32 AA/ ATL        
+ 7 AA      ATL     arr   2019-01-01 01:01:00   -23 AA/ ATL        
+ 8 AA      ATL     arr   2019-01-01 01:11:00   -15 AA/ ATL        
+ 9 AA      ATL     arr   2019-01-01 01:21:00   -18 AA/ ATL        
+10 AA      ATL     arr   2019-01-01 01:31:00    -8 AA/ ATL        
+# ℹ 2,090 more rows</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="solution-22" class="slide level2 smaller">
+<h2>Solution (2/2)</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a>flight_clean <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> block, </span>
+<span id="cb37-3"><a href=""></a>             <span class="at">y =</span> n, <span class="at">color =</span> type, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
+<span id="cb37-4"><a href=""></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb37-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(airline_airport), <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb37-6"><a href=""></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span>  <span class="st">"%H:%M"</span>, <span class="at">date_breaks =</span> <span class="st">"4 hour"</span>) <span class="sc">+</span></span>
+<span id="cb37-7"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb37-8"><a href=""></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb37-9"><a href=""></a>  <span class="fu">xlab</span>(<span class="st">"Time of the date"</span>) <span class="sc">+</span></span>
+<span id="cb37-10"><a href=""></a>  <span class="fu">ylab</span>(<span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="case-study-flight_files/figure-revealjs/solution-2-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="section-14" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a>flight_clean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,991 × 6
+   airline airport type  block                   n airline_airport
+   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;dttm&gt;              &lt;int&gt; &lt;chr&gt;          
+ 1 AA      ATL     arr   2019-01-01 00:01:00   -26 AA/ ATL        
+ 2 AA      ATL     arr   2019-01-01 00:11:00   -13 AA/ ATL        
+ 3 AA      ATL     arr   2019-01-01 00:21:00   -21 AA/ ATL        
+ 4 AA      ATL     arr   2019-01-01 00:31:00   -16 AA/ ATL        
+ 5 AA      ATL     arr   2019-01-01 00:41:00    -8 AA/ ATL        
+ 6 AA      ATL     arr   2019-01-01 00:51:00   -12 AA/ ATL        
+ 7 AA      ATL     arr   2019-01-01 01:01:00    -7 AA/ ATL        
+ 8 AA      ATL     arr   2019-01-01 01:11:00    -2 AA/ ATL        
+ 9 AA      ATL     arr   2019-01-01 01:21:00    -4 AA/ ATL        
+10 AA      ATL     arr   2019-01-01 01:31:00    -2 AA/ ATL        
+# ℹ 1,981 more rows</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-15" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a>flight_clean <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> block,</span>
+<span id="cb40-3"><a href=""></a>             <span class="at">y =</span> n, <span class="at">color =</span> type, <span class="at">fill =</span> type))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="case-study-flight_files/figure-revealjs/solution-2_auto_02_output-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-16" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a>flight_clean <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> block,</span>
+<span id="cb41-3"><a href=""></a>             <span class="at">y =</span> n, <span class="at">color =</span> type, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
+<span id="cb41-4"><a href=""></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="case-study-flight_files/figure-revealjs/solution-2_auto_03_output-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-17" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href=""></a>flight_clean <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> block,</span>
+<span id="cb42-3"><a href=""></a>             <span class="at">y =</span> n, <span class="at">color =</span> type, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
+<span id="cb42-4"><a href=""></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb42-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(airline_airport), <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="case-study-flight_files/figure-revealjs/solution-2_auto_04_output-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-18" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a>flight_clean <span class="sc">|&gt;</span></span>
+<span id="cb43-2"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> block,</span>
+<span id="cb43-3"><a href=""></a>             <span class="at">y =</span> n, <span class="at">color =</span> type, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
+<span id="cb43-4"><a href=""></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb43-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(airline_airport), <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb43-6"><a href=""></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span>  <span class="st">"%H:%M"</span>, <span class="at">date_breaks =</span> <span class="st">"4 hour"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="case-study-flight_files/figure-revealjs/solution-2_auto_05_output-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-19" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href=""></a>flight_clean <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> block,</span>
+<span id="cb44-3"><a href=""></a>             <span class="at">y =</span> n, <span class="at">color =</span> type, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
+<span id="cb44-4"><a href=""></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb44-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(airline_airport), <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb44-6"><a href=""></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span>  <span class="st">"%H:%M"</span>, <span class="at">date_breaks =</span> <span class="st">"4 hour"</span>) <span class="sc">+</span></span>
+<span id="cb44-7"><a href=""></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="case-study-flight_files/figure-revealjs/solution-2_auto_06_output-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-20" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a>flight_clean <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> block,</span>
+<span id="cb45-3"><a href=""></a>             <span class="at">y =</span> n, <span class="at">color =</span> type, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
+<span id="cb45-4"><a href=""></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb45-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(airline_airport), <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb45-6"><a href=""></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span>  <span class="st">"%H:%M"</span>, <span class="at">date_breaks =</span> <span class="st">"4 hour"</span>) <span class="sc">+</span></span>
+<span id="cb45-7"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb45-8"><a href=""></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="case-study-flight_files/figure-revealjs/solution-2_auto_07_output-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-21" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href=""></a>flight_clean <span class="sc">|&gt;</span></span>
+<span id="cb46-2"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> block,</span>
+<span id="cb46-3"><a href=""></a>             <span class="at">y =</span> n, <span class="at">color =</span> type, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
+<span id="cb46-4"><a href=""></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb46-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(airline_airport), <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb46-6"><a href=""></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span>  <span class="st">"%H:%M"</span>, <span class="at">date_breaks =</span> <span class="st">"4 hour"</span>) <span class="sc">+</span></span>
+<span id="cb46-7"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb46-8"><a href=""></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb46-9"><a href=""></a>  <span class="fu">xlab</span>(<span class="st">"Time of the date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="case-study-flight_files/figure-revealjs/solution-2_auto_08_output-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="section-22" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a>flight_clean <span class="sc">|&gt;</span></span>
+<span id="cb47-2"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> block,</span>
+<span id="cb47-3"><a href=""></a>             <span class="at">y =</span> n, <span class="at">color =</span> type, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
+<span id="cb47-4"><a href=""></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb47-5"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(airline_airport), <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb47-6"><a href=""></a>  <span class="fu">scale_x_datetime</span>(<span class="at">date_labels =</span>  <span class="st">"%H:%M"</span>, <span class="at">date_breaks =</span> <span class="st">"4 hour"</span>) <span class="sc">+</span></span>
+<span id="cb47-7"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb47-8"><a href=""></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb47-9"><a href=""></a>  <span class="fu">xlab</span>(<span class="st">"Time of the date"</span>) <span class="sc">+</span></span>
+<span id="cb47-10"><a href=""></a>  <span class="fu">ylab</span>(<span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="case-study-flight_files/figure-revealjs/solution-2_auto_09_output-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="summary" class="slide level2 smaller">
+<h2>Summary</h2>
+<p>We have a practical session to chain a few components we have learnt so far together:</p>
+<div class="fragment">
+<ul>
+<li>basic <code>dplyr</code> verbs (<code>filter()</code>, <code>mutate()</code>, <code>rename()</code>, <code>count()</code>) for data wrangling</li>
+<li><code>tidyr::pivot_longer()</code> to reshape the data</li>
+<li><code>ggplot2</code> for plotting</li>
+<li>temporal data specific:
+<ul>
+<li><code>lubridate: as_datetime()</code> to format arrival and departure dates,</li>
+<li><code>ggplot2::scale_x_datetime()</code> to format the date-time</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="summary-1" class="slide level2 smaller">
+<h2>Summary</h2>
+<ul>
+<li>Again, what I hope you get the most out of this class is to be comfortable with wrangling and plotting data with R.</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>In practice, a lot of the work is to think about how to translate what you want to do into <code>tidyverse</code> commands, e.g.&nbsp;
+<ul>
+<li>narrow down to particular airline/ airport becomes <code>filter()</code> on the rows.</li>
+<li>we want to compute/ plot arrival and departure together, so we need to reshape the data into long format with <code>pivot_longer()</code></li>
+<li>…</li>
+</ul></li>
+</ul>
+
+</div>
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="case-study-flight_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="case-study-flight_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="case-study-flight_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="case-study-flight_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="case-study-flight_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="case-study-flight_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="case-study-flight_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="case-study-flight_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="case-study-flight_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="case-study-flight_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': true,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
