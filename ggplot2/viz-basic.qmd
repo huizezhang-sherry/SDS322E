@@ -1,0 +1,455 @@
+---
+title: "Elements of Data Science <br> SDS 322E"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> week 01 lecture 01 Fall 2025"
+format: 
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    aspectratio: 169
+    smaller: true
+    theme: serif
+    preview-links: auto
+    pdf-separate-fragments: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center")
+options(pillar.width = 70)
+library(tidyverse)
+library(patchwork)
+library(gapminder)
+library(flipbookr) # remotes::install_github("kjhealy/flipbookr@quarto"
+```
+
+
+
+## Why `ggplot2`? 
+
+```{r}
+plot(-4:4, -4:4, type = "n")  # setting up coord. system
+points(x = rnorm(200), y = rnorm(200), col = "red")
+```
+
+
+## Why `ggplot2`? 
+
+  * `ggplot2` is a package for data visualization based on The Grammars of Graphics
+by Leland Wilkinson. 
+  
+  * Originally written by Hadley Wickham (part of his PhD dissertation), now maintained by posit/RStudio
+  
+Main references:
+
+  * ggplot2: Elegant Graphics for Data Analysis (3e) by Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen. <https://ggplot2-book.org/>
+
+  * Data Visualization: A practical introduction by Kieran Healy <https://socviz.co/index.html>
+  * Fundamentals of Data Visualization by Claus O. Wilke <https://clauswilke.com/dataviz/index.html>
+  
+## A layered grammar   
+
+::::{.columns}
+
+:::{.column}
+
+```{r eval = FALSE}
+DATA |> 
+  ggplot(aes(...)) + 
+  geom_xxx() + 
+  facet_xxx(...) + 
+  coord_xxx(...) + 
+  theme_xxx()
+```
+
+:::
+
+:::{.column}
+
+![](figures/layered-grammar.png)
+:::
+
+::::
+
+## A first example - Lets build!
+
+```{r}
+#| label: ggplot-1
+#| code-line-numbers: true
+#| fig-align: center
+ggplot(gapminder, 
+       aes(x = lifeExp, 
+           y = gdpPercap)) + 
+  geom_point()  +
+  facet_wrap(vars(continent)) +
+  labs(title = "GDP per Capita vs Life Expectancy", 
+       x = "GDP per Capita (log scale)", 
+       y = "Life Expectancy") + 
+  theme_minimal()
+```
+
+`r flipbookr:::chunq_reveal("ggplot-1", lcolw = "40", rcolw = "60")`
+
+## Geoms/ aethetic {.smaller}
+
+Here is a list of common aesthetics: `x` - x axis, `y` - y axis, `group` - determine how "lines" are closed, `color` - color, `fill` - fill for polygon or "closed" shapes (we will give an example to differentiate `color` and `fill`), `size` - size of the "points", `alpha` - transparency, `linetype` - solid/dashed/ dotted/ ... lines
+
+. . .
+
+Here is a list of common geoms in `ggplot2`: `geom_point()`, `geom_line()`, `geom_histogram()`, `geom_density()`, `geom_boxplot()`, `geom_text()`, `geom_label()`, `geom_smooth()`
+
+. . .
+
+Here are more: `geom_abline()`, `geom_hline()`, `geom_vline()`, `geom_tile()`, `geom_raster()`, `geom_polygon()`, `geom_area()`, `geom_segment()`, `geom_curve()`, `geom_path()`, `geom_jitter()`, `geom_dotplot()`, `geom_violin()`, `geom_errorbar()`, `geom_errorbarh()`, `geom_crossbar()`, `geom_linerange()`, `geom_pointrange()`,  `geom_sf()`, `geom_map()`, `geom_text_repel()`, `geom_label_repel()`, `geom_tile()`, `geom_ribbon()`, `geom_segment()`, `geom_curve()`
+
+. . .
+
+But - which one to use? 
+
+## Which geom to use? {.smaller}
+
+Unless you're instructed to make a xxx plot, you will need to decide which geom to use based on the type of data you have and the story you want to tell.
+
+In a project, it is often not straightforward to know the exact plot you want and you tweak it until you're satisfied. (We will see what this means) trails and errors....
+
+And we make horrible plots on the way....
+
+## Which geom to use? {.smaller}
+
+I want to see how a continuous variable changes across time, e.g. `lifeExp` across `time`
+
+. . .
+
+```{r}
+ggplot(gapminder, aes(x = year, y = lifeExp)) + 
+  geom_line()
+```
+
+**Bad plot!** Why are lines all linked together?
+
+##  {.smaller}
+
+Why are lines all linked together?
+
+Because we don't tell `geom_line()` to "create each line for each country". `geom_line` by default connects all points in the order they appear in the data.
+
+```{r}
+ggplot(gapminder, aes(x = year, y = lifeExp, group = country)) + 
+  geom_line()
+```
+
+. . .
+
+**Is it good enough?** Now I can see a general increasing trend for most countries, with two drops at around 1977 and 1992. 
+
+. . .
+
+Maybe adding some colors to reveal country/ continent information will help.
+
+## {.smaller}
+
+I want to add some colors to reveal country/ continent information
+
+```{r}
+#| fig.height: 6
+#| fig.width: 30
+ggplot(gapminder, 
+       aes(x = year, y = lifeExp, group = country)) + 
+  geom_line(aes(color = country))
+```
+
+. . .
+
+Ooops... *this is bad (and should be avoided) because* there are too many countries and the color mapping doesn't allow you to read which color corresponds to which country.
+
+Tip: When a categorical variable has too many levels, it is not a good idea to map it to color. 
+
+
+## {.smaller}
+
+We need to think about how to reduce the number of levels and here we can use `continent`:
+
+```{r}
+ggplot(gapminder, 
+       aes(x = year, y = lifeExp, group = country)) + 
+  geom_line(aes(color = continent))
+```
+
+Now we can see Europe and Oceania have higher life expectancy among all countries, while Africa has the lowest, along with some Asian countries.
+
+## {.smaller}
+
+Maybe we want to add a label/ text to the countries with the lowest life expectancy:
+
+```{r}
+ggplot(gapminder, 
+       aes(x = year, y = lifeExp, group = country)) + 
+  geom_line(aes(color = continent))  + 
+  # for Rwanda
+  geom_label(data = gapminder |> filter(lifeExp == min(lifeExp)), 
+             aes(label = country)) + 
+  # for Cambodia
+  geom_text(data = gapminder |> filter(year == 1977) |> filter(lifeExp == min(lifeExp)),
+            aes(label = country))
+```
+
+(also `ggrepel::geom_label_repel()` and `ggreple::geom_text_repel()`)
+
+## [Is it a good idea to facet the plot by country?]{.r-fit-text}
+
+```{r}
+ggplot(gapminder, 
+       aes(x = year, y = lifeExp, group = country)) + 
+  geom_line(aes(color = continent))  + 
+  facet_wrap(vars(continent))
+```
+
+
+
+
+## [What's the issue with the plot on the left?]{.r-fit-text}
+
+::::{.columns}
+
+:::{.column}
+
+```{r}
+set.seed(123)
+tibble(x = rnorm(10000), 
+       y = rnorm(10000)) |> 
+  ggplot(aes(x = x , y = y)) + 
+  geom_point()
+```
+:::
+
+:::{.column}
+```{r}
+set.seed(123)
+tibble(x = rnorm(10000), 
+       y = rnorm(10000)) |> 
+  ggplot(aes(x = x , y = y)) + 
+  geom_point(size = 0.1)
+```
+:::
+
+::::
+
+When plotting too many points, we may consider reduce the point size to avoid overplotting.
+
+## A better example {.smaller}
+
+```{r}
+#| output-location: column
+set.seed(123)
+tibble(x = rnorm(10000), 
+       y = rnorm(10000)) |> 
+  ggplot(aes(x = x , y = y)) + 
+  geom_point(size = 0.1)
+```
+
+Why is `size` specified outside `aes(...)`?
+
+. . .
+
+
+  
+`aesthetic` specifies how a *variable* in the data is mapped to a visual property. Here, `color = "blue"` is a constant value to be applied to all lines, hence you want to specify it inside the `geom_xxx()`, but outside `aes(...)`. 
+
+*Remember you can specify the `aes(...)` layer inside `ggplot()` and `geom_xxx()`.*
+
+## [Plots to summarize the distribution of a continuous variable]{.r-fit-text}
+
+`geom_boxplot()`, `geom_violin()`, `geom_density()`, `ggbeeswarm:::geom_quasirandom()`, `geom_jitter()`
+
+
+## Is this a good plot? {.smaller}
+
+pie chart, 3D pie chart, stack plot
+
+## [What's the best ratio for time series?]{.r-fit-text}
+
+## Density with reduced alpha
+
+## Sorting boxplot across mean value
+
+## race and age two categories: how to determine facet and bars depends on the interpretation
+
+## Scale
+
+`scale_<mapping>_<kind>()`
+
+scale_<x/y/color/fill>_<continuous/discrete/brewer/distiller>
+
+## Color
+
+## Facet
+
+Your best friends are `facet_wrap()` for one variable and `facet_grid(y ~ x)` for two variables
+
+[TODO] give example
+  
+
+## Other fancy facets: 
+  
+::::{.columns}
+
+:::{.column width="40%"}
+`ggh4x::facet_nested()` 
+
+![](figures/facet_nested.png)
+
+:::
+
+:::{.column  width="50%"}
+`geofacet::facet_geo()`
+![](figures/facet_geo.png)
+:::
+
+::::
+    
+## Theme cheatsheet
+
+<center>![](figures/theme-cheatsheet.png)</center>
+
+:::footer
+<https://isabella-b.com/blog/ggplot2-theme-elements-reference/>
+:::
+
+## [Please, please, please don't memorize all these theme elements!]{.r-fit-text}
+
+. . .
+
+Instead, put your cursor inside `theme()` and press the `Tab` key on your keyboard to activate this popup list available theme elements:
+
+<center>![](figures/theme.png)</center>
+
+```{r }
+#| eval: FALSE
+#| echo: FALSE
+#| label: theme-1
+#| code-line-numbers: true
+#| fig-align: center
+library(palmerpenguins)
+p1 <- penguins |> 
+  ggplot(aes(x = species, 
+             y = bill_depth_mm, 
+             color = species)) + 
+  ggbeeswarm::geom_quasirandom() + 
+  xlab("Bill length") + 
+  ylab("Bill depth") 
+p1 + #BREAK
+  # these are some useful ones
+  # give more x-axis space
+  theme(legend.position = "bottom") + #BREAK
+  # remove unnecessary reference lines
+  theme(panel.grid.minor = element_blank()) + #BREAK 
+  # adjust text orientation to avoid overlapping
+  theme(axis.text.x = element_text(angle = 90, 
+                                   hjust = 1)) + #BREAK
+  # larger text size for presentation
+  theme(text = element_text(size = 20)) + #BREAK
+  
+  # now you can free solo
+  theme(legend.title = element_text(
+    family = "menlo", size = 30)) + #BREAK
+  theme(panel.background = element_rect(
+    fill = "lightblue", color = "black")) + #BREAK
+  theme(panel.grid = element_line(
+    color = "black", size = 2)) #BREAK
+```
+
+`r flipbookr:::chunq_reveal("theme-1", lcolw = "50", rcolw = "50", smallcode = TRUE, break_type = "user", title = "Theme")`
+
+
+# Combine plots together: `patchwork` {.smaller background-image="figures/patchwork.jpg" background-size="100%" background-opacity="40%" background-position="50% 50%"} 
+
+## Where goes wrong? {.smaller}
+
+```{r eval = FALSE}
+library(ggplot2)
+p1 <- ggplot(mtcars) + 
+  geom_point(aes(mpg, disp)) + 
+  ggtitle('Plot 1')
+
+p2 <- ggplot(mtcars) + 
+  geom_boxplot(aes(gear, disp, group = gear)) + 
+  ggtitle('Plot 2')
+
+
+p1 / p2
+```
+
+> Error in p1/p2 : non-numeric argument to binary operator
+
+```{r eval = FALSE}
+p1 | p2
+```
+
+> Error in p1 | p2 : operations are possible only for numeric, logical or complex types
+
+
+## Where goes wrong? 
+
+**Solution:** include `library(patchwork)` in your script
+
+**Easy answer:** You forgot to load the `patchwork` package. 
+
+. . .
+
+**Longer answer: **
+
+* By default, the symbol, `/`, is an operator for division and `patchwork` redefines the symbol to combine the two plots up-and-down.
+
+. . . 
+
+* When the package is not loaded, what R thinks is that `p1` and `p2` are not numbers that I can do arithmetic, so let me stop and throw an error message.
+
+## [My best friends in `patchwork`]{.r-fit-text}
+
+```{r}
+#| label: patchwork-1
+#| code-line-numbers: true
+#| fig-align: center
+p1 <- ggplot(mtcars) + 
+  geom_point(aes(
+    x = mpg, y = disp, 
+    color = cyl))
+p2 <- ggplot(mtcars) +
+  geom_point(aes(
+    x = mpg, y = hp, 
+    color = cyl))
+p1 + p2 + 
+  plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
+```
+
+`r flipbookr:::chunq_reveal("patchwork-1", lcolw = "40", rcolw = "60")`
+
+## `ggplot2` extensions {.smaller background-image="figures/ggplot2-extensions.png" background-size="60%"  background-position="50% 70%"} 
+
+<https://exts.ggplot2.tidyverse.org/gallery/> - can scroll down
+
+
+
+# Grammar of Graphics
+
+  - visualization in general 
+  - why not just a single command to plot? - Why we want layers
+  - build a graph from layer to layer using ggplot2 
+    - [done] let's start
+    - [half] add geometry (point, line, histogram, density,text/ label) / add aesthetic mappings (x, y, group, color, fill)
+    - [half] add facet
+    - [done] theme
+    - scale
+      - color, fill: 
+        - base R color `RColorBrewer`, `colorspace`: qualitative, sequential, diverging
+        - how to pick a good color palette?
+        - legend text edit
+        - legend position
+    - coordinate system 
+      - change with `coord` and scale
+    - missing value: msg 
+    - [done] `patchwork`
+  - [done] a sea of possibility: ggplot2 extensions
+  - bridge towards modelling: `Tidy model objects with broom`
+  - exercise: can you figure it out how to do this?/ can we be evil
+
