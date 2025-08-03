@@ -217,6 +217,20 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 </section>
 <section id="assessement" class="slide level2">
 <h2>Assessement</h2>
+<ul>
+<li>Labs (30%)
+<ul>
+<li>best 10 out of 11, due Monday 11:59 pm week 3-13</li>
+</ul></li>
+<li>Homework (30%)
+<ul>
+<li>best 5 out of 6, due Thursday 11:59 pm week 3-5, 10-12</li>
+</ul></li>
+<li>Projects (40%)
+<ul>
+<li>2 out of 2, due Thursday 11:59 pm week 8 and 14</li>
+</ul></li>
+</ul>
 </section>
 <section id="learning-objectives" class="slide level2">
 <h2>Learning objectives</h2>
@@ -243,6 +257,9 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <section id="about-me" class="slide level2">
 <h2>About me</h2>
 <p>Postdoc, research on visualization, data analysis</p>
+</section>
+<section id="about-your-ta-and-ugcas" class="slide level2">
+<h2>About your TA and UGCAs</h2>
 </section>
 <section>
 <section id="use-of-llms" class="title-slide slide level1 center">
@@ -271,6 +288,7 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <center>
 <img data-src="figures/rstudio.png">
 </center>
+<p>Here is where you try and experiment, here is what you have saved in the workspace, here is where you write down things you want to keep for the future</p>
 </section>
 <section id="git-and-github" class="slide level2">
 <h2>Git and GitHub</h2>
@@ -356,6 +374,23 @@ What I mean by this ▶️
 <li>btw you just learned how to install a package both from CRAN (<code>install.packages()</code>) and from GitHub (<code>remotes::install_github()</code>).</li>
 </ul>
 </section>
+<section id="your-time" class="slide level2 smaller">
+<h2>Your time</h2>
+<ul>
+<li><p>Install and load the <code>tidyverse</code> package from CRAN</p>
+<ul>
+<li>Install: <code>install.packages("tidyverse")</code></li>
+<li>Load: <code>library(tidyverse)</code></li>
+</ul></li>
+<li><p>(advance) Install and load the <code>emo</code> package from GitHub</p>
+<ul>
+<li>Install the CRAN package <code>devtools</code> first: <code>install.packages("devtools")</code></li>
+<li>Install the <code>emo</code> package from GitHub: <code>devtools::install_github("hadley/emo")</code></li>
+<li>Load the library: <code>library(emo)</code></li>
+<li>Print your favorite emoji, e.g.&nbsp;<code>emo::ji("heart")</code></li>
+</ul></li>
+</ul>
+</section>
 <section id="more-tips" class="slide level2">
 <h2><span class="smaller">More tips</span></h2>
 <ul>
@@ -392,6 +427,9 @@ What I mean by this ▶️
 <h1><span class="r-fit-text">Quarto and Rmarkdown document</span></h1>
 
 </section>
+<section id="r-script-and-quarto-document" class="slide level2">
+<h2>R script and Quarto document</h2>
+</section>
 <section id="quarto" class="slide level2">
 <h2>Quarto</h2>
 <p>YAML (required), text (optional), code (optional)</p>
@@ -425,32 +463,41 @@ What I mean by this ▶️
 </div>
 </div>
 </div>
-</section>
-<section id="quarto---yaml" class="slide level2">
-<h2>Quarto - YAML</h2>
+</section></section>
+<section>
+<section id="project-structure" class="title-slide slide level1 center">
+<h1>Project structure</h1>
 <ul>
-<li>title, subtitle name, date</li>
-<li>specify output: pdf, html, fancy outputs: revealjs (how the slides are created)</li>
-<li>add latex packages for math</li>
+<li>Always open from the <code>.Rproj</code> file - check the top RHS</li>
+<li>use <code>here::here()</code>: <code>read_csv(here::here("data/xxx.csv))</code></li>
+<li></li>
 </ul>
 </section>
-<section id="quarto---text" class="slide level2">
-<h2>Quarto - text</h2>
-<p>Markdown:</p>
-<ul>
-<li><strong>Headings</strong>: <code># Heading 1</code>, <code>## Heading 2</code>, <code>### Heading 3</code></li>
-<li><strong>Bold</strong>: <code>**bold text**</code></li>
-<li><strong>Italics</strong>: <code>*italic text*</code></li>
-<li><strong>Links</strong>: <code>[link text](https://example.com)</code></li>
-<li>quote: <code>&gt;</code></li>
-</ul>
+<section id="r-history-and-ecosystem" class="slide level2">
+<h2>R history and ecosystem</h2>
+<p>S (Roger’s week 2 slides)</p>
+<p>Base R + packages</p>
+</section></section>
+<section id="a-mature-way-to-ask-for-help" class="title-slide slide level1 center">
+<h1>A mature way to ask for help</h1>
+<p><code>reprex</code></p>
 </section>
-<section id="quarto---code" class="slide level2">
-<h2>Quarto - code</h2>
-<p>Chunk option beginner pack: warning, messages, cache, eval, echo, fig.align: “center”, fig.width, fig.height, out.width, out.height,</p>
-<ul>
-<li><strong>Inline code</strong>: <code>`code`</code></li>
-</ul>
+
+<section>
+<section id="r-beginner-pack" class="title-slide slide level1 center">
+<h1>R beginner pack</h1>
+<p>basic calculation: <code>1 + 1</code> assign <code>&lt;-</code> and <code>=</code> function(arguments) pipe: <code>function2(function(arguments), arguments)</code>: <code>function(arguments) |&gt; function2(arguments)</code> <code>|&gt;</code> and <code>%&gt;%</code></p>
+</section>
+<section id="best-practice" class="slide level2">
+<h2>Best practice</h2>
+<p>lower_case</p>
+</section>
+<section id="the-big-picture" class="slide level2">
+<h2>The big picture</h2>
+<center>
+<img data-src="figures/data-science-big-picture.png">
+</center>
+<p><code>readr</code>, <code>janitor::clean_names()</code> <code>tidyr</code> <code>dplyr</code> <code>ggplot2</code> <code>tidymodels</code></p>
 
 </section></section>
     </div>

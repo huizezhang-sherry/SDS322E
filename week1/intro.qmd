@@ -26,6 +26,14 @@ lecture, lab, instructor, Grad TA: UGCAs:
 
 ## Assessement
 
+* Labs (30%)
+  * best 10 out of 11, due Monday 11:59 pm week 3-13
+* Homework (30%)
+  * best 5 out of 6, due Thursday 11:59 pm week 3-5, 10-12
+* Projects (40%)  
+  * 2 out of 2, due Thursday 11:59 pm week 8 and 14
+
+
 ## Learning objectives
 
 end goal: be comfortable to code in R to do some analysis and have enough breadth of knowledge to know where to look for things you need
@@ -46,6 +54,8 @@ end goal: be comfortable to code in R to do some analysis and have enough breadt
 ## About me
 
 Postdoc, research on visualization, data analysis
+
+## About your TA and UGCAs
 
 # Use of LLMs
 
@@ -148,6 +158,20 @@ Lesson learnt:
 -   No one can write the code in one go, we use a lot of helps ... and Google!
 -   btw you just learned how to install a package both from CRAN (`install.packages()`) and from GitHub (`remotes::install_github()`).
 
+## Your time {.smaller}
+
+- Install and load the `tidyverse` package from CRAN
+  * Install: `install.packages("tidyverse")` 
+  * Load: `library(tidyverse)`
+
+- (advance) Install and load the `emo` package from GitHub
+
+  * Install the CRAN package `devtools` first: `install.packages("devtools")`
+  * Install the `emo` package from GitHub: `devtools::install_github("hadley/emo")`
+  * Load the library: `library(emo)`
+  * Print your favorite emoji, e.g. `emo::ji("heart")`
+
+
 ## [More tips]{.smaller}
 
 -   When you meet an error message you don’t understand, try search it on Google
@@ -200,32 +224,6 @@ File > New File > Quarto Document / R Markdown
 
 :::
 
-## Quarto - YAML
-
-  * title, subtitle name, date
-  * specify output: pdf, html, fancy outputs: revealjs (how the slides are created)
-  * add latex packages for math
-
-
-## Quarto - text
-
-Markdown: 
-
--  **Headings**: `# Heading 1`, `## Heading 2`, `### Heading 3`
--  **Bold**: `**bold text**`
--  **Italics**: `*italic text*`
--  **Links**: `[link text](https://example.com)`
-- quote: `>`
-
-
-## Quarto - code
-
-Chunk option beginner pack: warning, messages, cache, eval, echo, fig.align: "center", fig.width, fig.height, out.width, out.height, 
-
--  **Inline code**: `` `code` ``
-
-
-never put `install.packages(xxx)` in your Quarto/ Rmarkdown file
 
 # Project structure
 
