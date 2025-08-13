@@ -16,50 +16,87 @@ format:
 knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
 ```
 
-## SDS 322E: Elements of Data Science
+## [SDS 322E: Elements of Data Science]{.r-fit-text} 
 
-lecture, lab, instructor, Grad TA: UGCAs:
+* Lecture: Monday / Wednesday / Friday 9-10am
+* Lab: Monday 3-4pm/ 4-5pm
+* Instructor: Sherry Zhang
+* Grad TA: Arka Sinha
+* UGCAs: Daniel, Luke, Vibhav
 
-## Course schedule
+## Learning objectives 
+
+**End goal**: Become comfortable coding in R for both exploratory (week 1-8) and confirmatory analysis (week 9-14), and develop enough breadth of knowledge to know where to find the tools and information you need. 
+
+. . .
+
+Specifically, you will learn:
+
+  * Program for data analysis in R using RStudio
+  * Wrangle and visualize data with the tidyverse
+  * Apply prediction and classification techniques
+
+
 
 ## Weekly schedule
 
+| Monday| Tuesday | Wednesday | Thursday | Friday   | 
+|-----------------------|---|-----------|-----------------|------------------|
+| Lecture  9-10am  |         | Lecture 9-10am   | | Lecture 9-10am|
+| Lab 3pm or 4pm  |         |    |  | | 
+| Lab due 11:59pm  |         |   |HW due 11:59pm | |
+
+
+<br>
+
+No dues on Friday and weekends :)
+
 ## Assessement
 
-* Labs (30%)
-  * best 10 out of 11, due Monday 11:59 pm week 3-13
-* Homework (30%)
-  * best 5 out of 6, due Thursday 11:59 pm week 3-5, 10-12
-* Projects (40%)  
-  * 2 out of 2, due Thursday 11:59 pm week 8 and 14
+* **Labs (30%)** - Mostly coding assignments written using R Markdown. Best 10 out of 11, due Monday 11:59 pm week 3-13
+* **Homework (30%)** - Coding practice, done in groups. Best 5 out of 6, due Thursday 11:59 pm week 3-5, 10-12
+* **Projects (40%)** - Integrate skills on a topic of your choice, done in groups of your choice. 2 out of 2, due Thursday 11:59 pm week 8 and 14
+* **Exams (0%)** - There are no exams
+
+## Interaction & Communication {.smaller}
+
+* Announcements in Canvas
+
+* Ask questions after lecture (I usually reserve some time)
+
+* Office hours: Ask questions / Listen to others/ Review feedback on assignments
+
+* Email
+  * Subject: include course code (322E), lab time, reason for emailing
+  * Plan ahead: I will get back to you within 1-2 business days
+  * Don’t expect answers during the weekend or after 5pm
+
+# Questions?
+
+## Hello, I'm Sherry 
+
+::::{.columms}
+
+:::{.column width="60%"}
+
+ - I'm a Postdoc Fellow in SDS. I did my PhD in Monash University in Australia. 
+ 
+ - I work on visualization, statistical computing, and thinking about "what's the best way to do data analysis".
+ 
+ - I climb `r set.seed(123); emo::ji("climber")`, and occasionally run. 
+
+:::
+
+:::{.column width="38%"}
+![](figures/sherry.jpeg)
+:::
+
+::::
 
 
-## Learning objectives
+## Meet your TA and UGCAs
 
-end goal: be comfortable to code in R to do some analysis and have enough breadth of knowledge to know where to look for things you need
-
-## Resources {.smaller background-image="figures/books.png" background-size="30%" background-position="50% 80%"}
-
--   **R for Data Science**: https://r4ds.hadley.nz/
--   **ggplot2: Elegant Graphics for Data Analysis (3e)** https://ggplot2-book.org/
--   [Stack Overflow](https://stackoverflow.com/questions/tagged/ggplot2?sort=frequent&pageSize=50) is a great source of answers to common ggplot2 questions. It is also a great place to get help, once you have created a reproducible example that illustrates your problem.
-
-## What you not learn 
-
--   calculus, linear algebra, probability
--   latex
-
-## Why data science
-
-## About me
-
-Postdoc, research on visualization, data analysis
-
-## About your TA and UGCAs
-
-# Use of LLMs
-
--   make up functions, old functions...
+# Trick 101 to make you slightly more comfortable in R and RStudio
 
 ## Install R and RStudio
 
@@ -74,31 +111,60 @@ Even if you installed R/RStudio previously, it's important to have the latest ve
 
 ## RStudio IDE
 
-<center>![](figures/rstudio.png)</center>
+<center>![](figures/rstudio.png){width="90%"}</center>
 
-Here is where you try and experiment, here is what you have saved in the workspace, here is where you write down things you want to keep for the future
+## Your time {.smaller}
 
+Change the appearance of your RStudio IDE: 
+
+  * Press `Command + ,` to pull out the options panel
+  * Select the Appearance tab and find your favorite Editor font and theme
+
+<center>![](figures/rstudio-appearance.png){width="80%"}</center>
 
 ## Git and GitHub 
 
-- This course in general doesn't require knowledge on version control, but you will need to use access pages on GitHub. 
+General speaking, you can navigate the course without knowing anything about Git and GitHub, but you will be able to see and know many things you would otherwise won't if you do know a little bit. 
 
-## Version control {.smaller background-image="figures/version-control.gif" background-size="30%" background-position="85% 50%"}
+  - If you know how to browse GitHub, you can see the source code of the packages we use in the course, and you can also see the source code of the lecture slides.
 
-- Install Git: <https://git-scm.com/downloads>
-- Register a GitHub account: <https://github.com/>
-- Reference: Happy Git with R
-  *  <https://happygitwithr.com/>
+  - Happy Git with R: <https://happygitwithr.com/>
+  
+## Find the `pkgdown` site of a package {.smaller background-image="figures/dplyr-pkgdown-1.png" background-size="65%" background-position="50% 70%"}
 
-# Trick 101 to make you slightly more comfortable in R
+Go to <https://github.com/tidyverse/dplyr> and click the package link:
 
-## [Change the appearance of your RStudio IDE]{.r-fit-text} {.smaller}
+## {.smaller}
 
-press `Command + ,` to pull out the options panel
+The `pkgdown` site contains the exact same information as `?PKG::FUN()` but the HTML version is much better formatted.
 
-select the Appearance tab and find your favorite Editor font and theme
+::::{.columns}
 
-<center>![](figures/rstudio-appearance.png)</center>
+:::{.column}
+
+From the pkgdown site:
+
+![](figures/summarize-pkgdown.png)
+
+:::
+
+:::{.column}
+
+From `?dplyr::summarise`:
+
+![](figures/summarize-help.png)
+
+:::
+
+
+::::
+
+## 
+
+The `pkgdown` sites also have more detailed vignettes (aka articles) about the package: 
+
+<center>![](figures/pkgdown-get-started.png)</center>
+
 
 ## Coding is never memorization!
 
@@ -171,96 +237,4 @@ Lesson learnt:
   * Load the library: `library(emo)`
   * Print your favorite emoji, e.g. `emo::ji("heart")`
 
-
-## [More tips]{.smaller}
-
--   When you meet an error message you don’t understand, try search it on Google
-
-<center>![](figures/error-msg.png)</center>
-
--   Use `?pkg::function` (e.g. `?dplyr::summarise`) to read the Helper page of a function if you can’t remember the details of a particular function or an argument
-
-    -   go through the help page: 1) details of arguments, 2) examples
-
-## [It doesn’t hurt to know a few tricks]{.r-fit-text}{.smaller background-image="figures/dplyr-pkgdown-1.png" background-size="60%" background-position="50% 80%"}
-
-package pkgdown site: go to <https://github.com/tidyverse/dplyr>
-
-click the package link
-
-## `pkgdown` site of the `dplyr` package {.smaller background-image="figures/dplyr-pkgdown-2.png" background-size="50%" background-position="50% 80%"}
-
-- The **Get started** page for introductory materials
-- The **Reference** page has all the functions available in the package
-  - click one to see the documentation
-- The **Articles** page contains more in-depth articles about the package
-
-# [Quarto and Rmarkdown document]{.r-fit-text}
-
-## R script and Quarto document
-
-## Quarto
-
-YAML (required), text (optional), code (optional)
-
-write your things in a R script for programming, but mostly you will interact with RMarkdown/ Quarto document
-
--   Quarto: you can “write/ run code” in a “Word document”: open a template and render a pdf,
--   also render into a html document
--   do you know that: you can also write papers, books, making slides, writing CV, create website all with Quarto documents
-
-## [Render (knitr) your first Quarto (Rmarkdown) document]{.r-fit-text}
-
-
-````
-File > New File > Quarto Document / R Markdown
-````
-
-:::{layout-ncol=2}
-
-![quarto](figures/quarto.png)
-
-![RMarkdown](figures/rmarkdown.png)
-
-:::
-
-
-# Project structure
-
-* Always open from the `.Rproj` file - check the top RHS
-* use `here::here()`: `read_csv(here::here("data/xxx.csv))`
-* 
-
-
-## R history and ecosystem
-
-S (Roger's week 2 slides)
-
-Base R + packages
-
-# A mature way to ask for help
-
-`reprex`
-
-# R beginner pack
-
-basic calculation: `1 + 1`
-assign `<-` and `=`
-function(arguments)
-pipe: `function2(function(arguments), arguments)`: `function(arguments) |> function2(arguments)`
-`|>` and `%>%`
-
-
-## Best practice
-
-lower_case
-
-## The big picture
-
-<center>![](figures/data-science-big-picture.png)</center>
-
-`readr`, `janitor::clean_names()`
-`tidyr`
-`dplyr`
-`ggplot2`
-`tidymodels`
+  

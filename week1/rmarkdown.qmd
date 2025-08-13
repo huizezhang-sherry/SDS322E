@@ -1,0 +1,126 @@
+---
+title: "Elements of Data Science SDS 322E"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin"
+format: 
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    aspectratio: 169
+    theme: serif
+    preview-links: auto
+    pdf-separate-fragments: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
+```
+
+## Class to Brainrot 
+
+* Being able to work with an R Markdown document — Your labs/HWs/Projects will be provided in this format, and you’ll need to knit them into a PDF for submission.
+
+. . .
+
+  * Of cause, you will need to have R and RStudio installed, and know how to install packages.
+
+
+## Hi -  I'm an R script! {.smaller}
+
+<https://github.com/tidyverse/dplyr/blob/main/R/summarise.R>
+
+* Code is first class citizens here and all the text and comments need to start with `#` (`#'` is a special symbol used for package documentation).
+
+<center>![](figures/dplyr-rscript.png){width="60%"}</center>
+
+
+
+
+## Hi - I'm a Markdown document! {.smaller}
+
+[<https://raw.githubusercontent.com/tidyverse/dplyr/refs/heads/main/README.md>]{.r-fit-text}
+
+::::{.columns}
+
+:::{.column}
+
+* Text are first class citizens here. Generally you won't interact with me directly in this class but I lay the foundation for R Markdown documents.
+
+(The first line says *README.md is generated from README.Rmd. Please edit that file*)
+
+:::
+
+
+:::{.column}
+![](figures/dplyr-markdown.png)
+:::
+
+::::
+
+
+## Hi - I'm an R Markdown document! {.smaller}
+
+
+````
+File > New File > Quarto Document / R Markdown
+````
+
+
+::::{.columns}
+
+:::{.column width = "60%"}
+
+* I will be the document you mainly work with in this class. 
+
+* I’m more powerful than the previous two guys because I can 
+
+  * include both text and code (in code chunks), 
+  * run the code to produce output, and 
+  * render the results to multiple formats such as HTML, PDF, and Word.
+
+:::
+
+
+:::{.column width="38%"}
+![](figures/rmarkdown-doc.png)
+:::
+
+::::
+
+## {.smaller}
+
+[Actually, I may be more powerful than you think. With me, you can:]{.r-fit-text}
+
+1. **Write documents, papers, and books:** <https://r4ds.hadley.nz/>
+
+<center>![](figures/r4ds-github.png){width="80%"}</center>
+
+*All the references from lecture 1 are written R Markdown (or its newer generation - Quarto).*
+
+## {.smaller}
+
+[Actually, I may be more powerful than you think. With me, you can:]{.r-fit-text}
+
+2. **Create HTML or PDF slides** - like these slides:
+
+<center>![](figures/this-slides.png){width="80%"}</center>
+
+## {.smaller}
+
+[Actually, I may be more powerful than you think. With me, you can:]{.r-fit-text}
+
+3. **Build a personal website and write blogs **: <https://www.dicook.org/>
+
+<center>![](figures/website.png){width="80%"}</center>
+
+
+
+## 
+
+Sorry, but you will stuck with me for the rest of the class.
+
+
+<center>![](figures/rmarkdown-welcome.png){width="80%"}</center>
+
+
+
