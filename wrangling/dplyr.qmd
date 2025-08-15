@@ -1,0 +1,62 @@
+---
+title: "Elements of Data Science <br> SDS 322E"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> Fall 2025"
+format: 
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    aspectratio: 169
+    smaller: true
+    theme: serif
+    preview-links: auto
+    pdf-separate-fragments: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", cache = TRUE)
+options(pillar.width = 70)
+library(tidyverse)
+library(tsibble)
+library(flipbookr) # remotes::install_github("kjhealy/flipbookr@quarto")
+theme_set(
+  theme_bw() + 
+  theme(panel.background = element_rect(fill = "#f0f1eb"),
+        plot.background = element_rect(fill = "#f0f1eb"), 
+        legend.background = element_rect(fill = "#f0f1eb"), 
+        panel.grid = element_line(color = "grey80"))
+  )
+```
+
+## Welcome to tidyverse {background-image="figures/tidyverse.png" background-size="90%"}
+
+
+<!-- # Tidy data  -->
+
+<!--   - data.frame and tibble -->
+<!--   - tidy data principles -->
+<!--   - `tidyr`: pivot_longer, pivot_wider (maybe nest) -->
+
+<!-- # `dplyr`  -->
+
+<!--   - split-apply-combine -->
+<!--     - <https://hadley.github.io/25-tidyverse-history/> -->
+<!--   - basics: mutate, select, filter, arrange, summarize -->
+
+<!-- # `dplyr`  -->
+
+<!--   - join data  -->
+
+<!-- # `stringr`: for processing string -->
+
+<!--   - `stringr` vs. base R -->
+<!--   - regular expression  -->
+
+<!-- # `lubridate`: for processing date and time -->
+
+<!--   - often the downloaded data is in character format -->
+<!--   - turn into a date format from character string -->
+<!--   - extract components of date and time -->
+
+
+
