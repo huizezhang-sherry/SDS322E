@@ -1,0 +1,90 @@
+---
+title: "Elements of Data Science SDS 322E"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin"
+format: 
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    aspectratio: 169
+    theme: serif
+    preview-links: auto
+    pdf-separate-fragments: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, eval = TRUE, fig.align = "center")
+
+library(tidyverse)
+library(gapminder)
+library(gganimate)
+```
+
+## Class to Brainrot 
+
+* Let's play - we will make animations today!
+
+
+## [Remember the gapminder animation?]{.r-fit-text}
+
+<center>![](anim/gapminder-web.mov)</center>
+
+
+We will make this today!
+
+
+## Start from a static plot
+
+```{r}
+p1 <- ggplot(gapminder, aes(x = gdpPercap, lifeExp, 
+                            size = pop, colour = continent)) +
+  geom_point(show.legend = FALSE)
+p1
+```
+
+
+## Add some color
+
+```{r}
+scales::show_col(gapminder::continent_colors)
+```
+
+
+## Add some color
+
+```{r}
+p2 <- p1 +
+  scale_color_manual(values = gapminder::continent_colors) +
+  scale_x_log10(
+    breaks = c(500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000),
+    labels = c("500", "1000", "2000", "4000", "8k", "16k", "32k", "64k", "128k")
+  ) +
+  scale_y_continuous(breaks = seq(10, 90, by = 10))
+
+p2
+```
+
+
+## Let's move the points
+
+```{r}
+p2 + transition_time(year)
+```
+
+## Let's add an animated title
+
+```{r}
+p2 + transition_time(year) +
+  labs(title = 'Year: {frame_time}', 
+       x = 'GDP per capita', y = 'life expectancy')
+```
+
+
+## Here is how you save it
+
+```{r eval = FALSE}
+anim_save(p3, filename = "animation/anim/gapminder_animation.gif",
+           width = 500, height = 300, nframes = 100, fps = 10)
+
+```
+
