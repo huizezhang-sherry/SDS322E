@@ -95,7 +95,7 @@ File > New File > Quarto Document / R Markdown
 
 <center>![](figures/r4ds-github.png){width="80%"}</center>
 
-*All the references from lecture 1 are written R Markdown (or its newer generation - Quarto).*
+*Most of the references/books in this class are written R Markdown (or its newer generation - Quarto).*
 
 ## {.smaller}
 

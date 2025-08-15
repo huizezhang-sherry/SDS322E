@@ -1,0 +1,364 @@
+---
+title: "Elements of Data Science <br> SDS 322E"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> week 01 lecture 01 Fall 2025"
+format: 
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    aspectratio: 169
+    theme: serif
+    preview-links: auto
+    pdf-separate-fragments: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
+options(pillar.width = 80)
+library(tidyverse)
+library(gapminder)
+library(nycflights13)
+```
+
+## R history and ecosystem
+
+S (Roger's week 2 slides)
+
+Base R + packages
+  
+## Why data science
+
+
+## Why R? 
+
+You don't need to write FORTRAN code to do data analysis!
+
+R code:
+
+```{r eval = FALSE}
+library(tidyverse)
+mtcars |>
+  mutate(kpl = mpg * 0.425144) |>
+  filter(vs == 0) |>
+  group_by(cyl) |>
+  summarize(
+    disp = mean(disp, na.rm = TRUE),
+    kpl = mean(kpl, na.rm = TRUE)) |> 
+  arrange(disp)
+```
+
+How would the FORTRAN 90 code look like? 
+
+## [FORTRAN 90 code for the same task]{.r-fit-text}
+
+9 lines of code in R vs. 70 lines of code in FORTRAN 90
+
+```{fortran eval = FALSE}
+program mtcars_summary
+    implicit none
+    integer, parameter :: dp = selected_real_kind(15, 307)
+    integer, parameter :: nmax = 100
+    real(dp) :: mpg(nmax), disp(nmax), kpl(nmax)
+    integer :: cyl(nmax), vs(nmax)
+    integer :: i, n, j, ngrp, idx
+    integer :: cyl_group(nmax)
+    real(dp) :: disp_sum(nmax), kpl_sum(nmax)
+    integer :: count(nmax)
+    real(dp) :: disp_mean(nmax), kpl_mean(nmax)
+    integer :: temp_i
+    real(dp) :: temp_r
+    ! open and read data
+    open(unit=10, file='mtcars.csv', status='old', action='read')
+    n = 0
+    do
+        read(10, *, end=100) mpg(n+1), cyl(n+1), disp(n+1), &
+                              temp_r, temp_r, temp_r, temp_r, vs(n+1), &
+                              temp_i, temp_i, temp_i
+        n = n + 1
+    end do
+100 close(10)
+    ! compute kpl
+    do i = 1, n
+        kpl(i) = mpg(i) * 0.425144_dp
+    end do
+    ! filter vs == 0
+    ngrp = 0
+    do i = 1, n
+        if (vs(i) == 0) then
+            ! check if cyl group already exists
+            idx = 0
+            do j = 1, ngrp
+                if (cyl_group(j) == cyl(i)) idx = j
+            end do
+            if (idx == 0) then
+                ngrp = ngrp + 1
+                cyl_group(ngrp) = cyl(i)
+                disp_sum(ngrp) = disp(i)
+                kpl_sum(ngrp) = kpl(i)
+                count(ngrp) = 1
+            else
+                disp_sum(idx) = disp_sum(idx) + disp(i)
+                kpl_sum(idx)  = kpl_sum(idx) + kpl(i)
+                count(idx)    = count(idx) + 1
+            end if
+        end if
+    end do
+    ! compute means
+    do j = 1, ngrp
+        disp_mean(j) = disp_sum(j) / count(j)
+        kpl_mean(j)  = kpl_sum(j) / count(j)
+    end do
+    ! sort by disp_mean
+    do i = 1, ngrp-1
+        do j = i+1, ngrp
+            if (disp_mean(j) < disp_mean(i)) then
+                temp_r = disp_mean(i); disp_mean(i) = disp_mean(j); disp_mean(j) = temp_r
+                temp_r = kpl_mean(i);  kpl_mean(i)  = kpl_mean(j);  kpl_mean(j)  = temp_r
+                temp_i = cyl_group(i); cyl_group(i) = cyl_group(j); cyl_group(j) = temp_i
+            end if
+        end do
+    end do
+    ! print result
+    print '(A4,2X,A10,2X,A10)', 'cyl', 'disp_mean', 'kpl_mean'
+    do j = 1, ngrp
+        print '(I4,2X,F10.3,2X,F10.3)', cyl_group(j), disp_mean(j), kpl_mean(j)
+    end do
+end program mtcars_summary
+
+```
+
+## The big picture
+
+<center>![](figures/data-science-big-picture.png)</center>
+
+`readr`, `janitor::clean_names()`
+`tidyr`
+`dplyr`
+`ggplot2`
+`tidymodels`
+
+
+## In next few weeks... {.smaller}
+
+
+|Week |Date | Content|
+|---- |---| ------------------------|  
+|Week 2 |09/03| tidy data concept <br> The `dplyr` package: `mutate`, `select`, `filter`, `arrange`, `summarize`, |Week `group_by`|
+||09/05| |
+|Week 3 |09/08| Visualization with `ggplot2`: geometry + aesthetics|
+||09/10| Visualization with `ggplot2`: geometry + aesthetics|
+| |09/12| Visualization with `ggplot2`: scale + color + facet + theme|
+|Week 4 |09/15| Advanced data wrangling: `dplyr::*_join`, `tidyr::pivot_longer`, and `tidyr::pivot_wider`|
+| |09/17| Dealing with time: the `lubridate` package|
+|...||... |
+|Week 7 |10/08|	Dealing with text: the `stringr` package|
+
+
+## Resources {.smaller}
+
+::::{.columms}
+
+ <!-- background-image="figures/books.png" background-size="30%" background-position="50% 80%" -->
+
+:::{.column width="60%"}
+
+-  **R for Data Science** by *Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund*:  <https://r4ds.hadley.nz/>
+-  **ggplot2: Elegant Graphics for Data Analysis (3e)** by *Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen*: <https://ggplot2-book.org/>
+-  **Fundamentals of Data Visualization** by *Claus O. Wilke*: <https://clauswilke.com/dataviz/>
+-  **Statistical Computing using R and Python** by *Susan Vanderplas*: <https://srvanderplas.github.io/stat-computing-r-python/>
+
+**We will not learn Python in this course.**
+
+:::
+
+:::{.column width="38%"}
+![](figures/books.png)
+:::
+
+::::
+
+
+# R beginner pack
+
+## Basic operations
+
+basic calculation: `1 + 1`
+assign `<-` and `=`
+function(arguments)
+pipe: `function2(function(arguments), arguments)`: `function(arguments) |> function2(arguments)`
+`|>` and `%>%`
+
+
+## Best practice
+
+lower_case
+
+
+## Gapminder Data
+
+<https://www.youtube.com/watch?v=jbkSRLYSojo&ab_channel=BBC>
+
+
+## Gapminder Data
+
+```{r}
+# install.packages("gapminder")
+library(gapminder)
+gapminder::gapminder
+```
+
+## Read documentation 
+
+
+```{r}
+?gapminder::gapminder
+```
+
+
+
+
+
+::::{.columns .fragment}
+
+:::{.column}
+![](figures/gapminder-1.png)
+:::
+
+
+:::{.column .fragment}
+
+<br> 
+
+<br>
+<center>We can write some simple code to check the information in the documentation.</center>
+
+
+:::
+
+
+::::
+
+
+
+
+
+
+## [How many rows and how many columns?]{.r-fit-text}
+
+> The main data frame gapminder has 1704 rows and 6 variables:
+
+```{r}
+nrow(gapminder)
+ncol(gapminder)
+dim(gapminder)
+colnames(gapminder)
+```
+
+## Did you notice? {.smaller}
+
+[When we print the data, the header already tells you the number of rows and columns]{.r-fit-text}
+
+> #A tibble: 1,704 × 6
+
+```{r}
+gapminder
+```
+
+
+## How many countries? 
+
+> Country is a factor with 142 levels
+
+```{r}
+gapminder$country |> unique() |> length()
+```
+
+## How many continent?
+
+> Continent is a factor with 5 levels
+
+```{r}
+gapminder$continent |> unique() 
+```
+
+## What' the range of year reported?
+
+> Year ranges from 1952 to 2007 in increments of 5 years
+
+```{r}
+gapminder$year |> range()
+```
+
+. . .
+
+```{r}
+gapminder$year |> unique()
+gapminder$year |> unique() |> diff()
+```
+
+
+## [What's the min, mean, median, max of lifeExp?]{.r-fit-text}
+
+```{r}
+min(gapminder$lifeExp)
+mean(gapminder$lifeExp)
+median(gapminder$lifeExp)
+max(gapminder$lifeExp)
+summary(gapminder$lifeExp)
+```
+
+## Flight data
+
+```{r echo = FALSE}
+options(pillar.width = 80,
+        pillar.print_max = 5,
+        pillar.print_min = 5)
+```
+
+```{r}
+nycflights13::flights
+```
+
+. . .
+
+We can't see all the variables - we need a better way to see it
+
+## Flight data: `dplyr::glimpse()`
+
+```{r echo = FALSE}
+options(pillar.width = 60,
+        pillar.print_max = 20,
+        pillar.print_min = 20)
+```
+
+```{r}
+glimpse(nycflights13::flights)
+```
+
+
+## Access the documentation with `?`
+
+```{r}
+?dplyr::glimpse
+```
+
+<center>![](figures/glimpse.png){width="60%"}</center>
+
+
+## You can also `View()` the data
+
+```{r}
+View(nycflights13::flights)
+```
+
+<center>![](figures/view.png){width="70%"}</center>
+
+
+## Your time 
+
+Practice what we've just learn via
+
+```{r eval = FALSE}
+usethis::create_from_github("SDS322E-2025FALL/basics")
+```
+
