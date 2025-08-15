@@ -345,6 +345,25 @@ glimpse(nycflights13::flights)
 <center>![](figures/glimpse.png){width="60%"}</center>
 
 
+## Look at the first few rows
+
+```{r}
+head(nycflights13::flights, n = 3)
+```
+
+## The last few rows?
+
+```{r}
+tail(nycflights13::flights, n = 3)
+```
+
+
+Check the documentation to see the default `n` value for `head()` and `tail()`.
+
+. . .
+
+![](figures/default-n-tail.png)
+
 ## You can also `View()` the data
 
 ```{r}
@@ -352,6 +371,31 @@ View(nycflights13::flights)
 ```
 
 <center>![](figures/view.png){width="70%"}</center>
+
+
+## [What's the average of arrival delay (`arr_delay`)]{.r-fit-text}
+
+```{r}
+mean(nycflights13::flights$arr_delay)
+```
+
+why!!!
+
+. . . 
+
+```{r}
+is.na(nycflights13::flights$arr_delay) |> head(n = 10)
+
+is.na(nycflights13::flights$arr_delay) |> sum()
+```
+
+. . .
+
+A better way: 
+
+```{r}
+mean(nycflights13::flights$arr_delay, na.rm = TRUE)
+```
 
 
 ## Your time 

@@ -636,14 +636,94 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <img data-src="figures/glimpse.png" style="width:60.0%">
 </center>
 </section>
+<section id="look-at-the-first-few-rows" class="slide level2">
+<h2>Look at the first few rows</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a><span class="fu">head</span>(nycflights13<span class="sc">::</span>flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 19
+   year month   day dep_time sched_dep_time dep_delay
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+1  2013     1     1      517            515         2
+2  2013     1     1      533            529         4
+3  2013     1     1      542            540         2
+# ℹ 13 more variables: arr_time &lt;int&gt;,
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="the-last-few-rows" class="slide level2">
+<h2>The last few rows?</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a><span class="fu">tail</span>(nycflights13<span class="sc">::</span>flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 19
+   year month   day dep_time sched_dep_time dep_delay
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+1  2013     9    30       NA           1210        NA
+2  2013     9    30       NA           1159        NA
+3  2013     9    30       NA            840        NA
+# ℹ 13 more variables: arr_time &lt;int&gt;,
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+</div>
+</div>
+<p>Check the documentation to see the default <code>n</code> value for <code>head()</code> and <code>tail()</code>.</p>
+<div class="fragment">
+<p><img data-src="figures/default-n-tail.png"></p>
+</div>
+</section>
 <section id="you-can-also-view-the-data" class="slide level2">
 <h2>You can also <code>View()</code> the data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a><span class="fu">View</span>(nycflights13<span class="sc">::</span>flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">View</span>(nycflights13<span class="sc">::</span>flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <center>
 <img data-src="figures/view.png" style="width:70.0%">
 </center>
+</section>
+<section id="whats-the-average-of-arrival-delay-arr_delay" class="slide level2">
+<h2><span class="r-fit-text">What’s the average of arrival delay (<code>arr_delay</code>)</span></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href=""></a><span class="fu">mean</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+<p>why!!!</p>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href=""></a><span class="fu">is.na</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href=""></a><span class="fu">is.na</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay) <span class="sc">|&gt;</span> <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9430</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>A better way:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href=""></a><span class="fu">mean</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.895377</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="your-time" class="slide level2">
+<h2>Your time</h2>
+<p>Practice what we’ve just learn via</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href=""></a>usethis<span class="sc">::</span><span class="fu">create_from_github</span>(<span class="st">"SDS322E-2025FALL/basics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 </section></section>
     </div>

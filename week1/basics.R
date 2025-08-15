@@ -28,3 +28,9 @@ nycflights13::flights
 glimpse(nycflights13::flights)
 ?dplyr::glimpse
 View(nycflights13::flights)
+
+
+mean(nycflights13::flights$arr_delay)
+is.na(nycflights13::flights$arr_delay) |> head(n = 10)
+is.na(nycflights13::flights$arr_delay) |> sum()
+mean(nycflights13::flights$arr_delay, na.rm = TRUE)
