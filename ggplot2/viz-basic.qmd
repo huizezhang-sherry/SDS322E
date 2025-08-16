@@ -595,7 +595,11 @@ p1 + #BREAK
 `r flipbookr:::chunq_reveal("theme-1", lcolw = "50", rcolw = "50", smallcode = TRUE, break_type = "user", title = "Theme")`
 
 
-# Combine plots together: `patchwork` {.smaller background-image="figures/patchwork.jpg" background-size="100%" background-opacity="40%" background-position="50% 50%"} 
+# {.smaller background-image="figures/patchwork-art.png" background-size="90%" background-position="50% 50%"} 
+
+::: footer
+Artwork by @allison_horst
+:::
 
 ## Where goes wrong? {.smaller}
 

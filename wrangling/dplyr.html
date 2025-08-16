@@ -28,6 +28,72 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="dplyr_files/libs/revealjs/dist/theme/quarto-816793a8a4a837d14f6ea458e2f1c5cb.css">
   <link href="dplyr_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -139,31 +205,564 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 </div>
 
 </section>
-<section id="welcome-to-tidyverse" class="slide level2" data-background-image="figures/tidyverse.png" data-background-size="90%">
-<h2>Welcome to tidyverse</h2>
-<!-- # Tidy data  -->
-<!--   - data.frame and tibble -->
-<!--   - tidy data principles -->
-<!--   - `tidyr`: pivot_longer, pivot_wider (maybe nest) -->
-<!-- # `dplyr`  -->
-<!--   - split-apply-combine -->
-<!--     - <https://hadley.github.io/25-tidyverse-history/> -->
-<!--   - basics: mutate, select, filter, arrange, summarize -->
-<!-- # `dplyr`  -->
-<!--   - join data  -->
-<!-- # `stringr`: for processing string -->
-<!--   - `stringr` vs. base R -->
-<!--   - regular expression  -->
-<!-- # `lubridate`: for processing date and time -->
-<!--   - often the downloaded data is in character format -->
-<!--   - turn into a date format from character string -->
-<!--   - extract components of date and time -->
+<section id="section" class="slide level2" data-background-image="figures/dplyr-filter.png" data-background-size="90%">
+<h2></h2>
+<div class="footer">
+<p>Artwork by <span class="citation" data-cites="allison_horst">@allison_horst</span></p>
+</div>
 </section>
-<section id="some-history" class="slide level2">
-<h2><span class="smaller">Some history</span></h2>
+<section id="dplyr-syntax" class="slide level2">
+<h2><code>dplyr</code> syntax</h2>
+<center>
+<code>DATA |&gt; filter(PREDICATE)</code>
+</center>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># basic</span></span>
+<span id="cb1-2"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(dep_delay <span class="sc">&gt;</span> <span class="dv">120</span>)</span>
+<span id="cb1-3"><a href=""></a></span>
+<span id="cb1-4"><a href=""></a><span class="co"># by a single value</span></span>
+<span id="cb1-5"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb1-6"><a href=""></a></span>
+<span id="cb1-7"><a href=""></a><span class="co"># by multiple value</span></span>
+<span id="cb1-8"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb1-9"><a href=""></a></span>
+<span id="cb1-10"><a href=""></a><span class="co"># by negation</span></span>
+<span id="cb1-11"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(month <span class="sc">!=</span> <span class="dv">1</span>)</span>
+<span id="cb1-12"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span>month <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb1-13"><a href=""></a></span>
+<span id="cb1-14"><a href=""></a><span class="co"># by multiple condition</span></span>
+<span id="cb1-15"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> dep_delay <span class="sc">&gt;</span> <span class="dv">120</span>)</span>
+<span id="cb1-16"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">1</span>, dep_delay <span class="sc">&gt;</span> <span class="dv">120</span>)</span>
+<span id="cb1-17"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> dep_delay <span class="sc">&gt;</span> <span class="dv">120</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="these-predicates-comes-from-how-you-compare-vectors-in-r" class="slide level2">
+<h2>These predicates comes from how you compare vectors in R</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="dv">1</span> <span class="sc">==</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="dv">1</span> <span class="sc">==</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="dv">1</span> <span class="sc">!=</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<div class="fragment">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="dv">3</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="sc">!</span>(<span class="dv">3</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>(<span class="dv">1</span> <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">&amp;</span> (<span class="dv">1</span> <span class="sc">==</span> <span class="dv">2</span>) <span class="co"># TRUE and FALSE -&gt; FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>(<span class="dv">1</span> <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|</span> (<span class="dv">1</span> <span class="sc">==</span> <span class="dv">2</span>) <span class="co"># TRUE or FALSE -&gt; TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="warm-up-how-many-airport-are-there-in-nyc" class="slide level2">
+<h2><span class="r-fit-text">Warm up: how many airport are there in NYC?</span></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>flights<span class="sc">$</span>origin <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "EWR" "LGA" "JFK"</code></pre>
+</div>
+</div>
+</section>
+<section id="find-all-the-entries-with-departure-delay-larger-than-2-hours" class="slide level2">
+<h2><span class="r-fit-text">Find all the entries with departure delay larger than 2 hours</span></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(dep_delay <span class="sc">&gt;</span> <span class="dv">120</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9,723 × 19
+   year month   day dep_time sched_dep_time dep_delay arr_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+1  2013     1     1      848           1835       853     1001
+2  2013     1     1      957            733       144     1056
+3  2013     1     1     1114            900       134     1447
+4  2013     1     1     1540           1338       122     2020
+5  2013     1     1     1815           1325       290     2120
+# ℹ 9,718 more rows
+# ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
+#   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+#   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="find-all-the-entries-in-january" class="slide level2">
+<h2>Find all the entries in January</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 27,004 × 19
+   year month   day dep_time sched_dep_time dep_delay arr_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+1  2013     1     1      517            515         2      830
+2  2013     1     1      533            529         4      850
+3  2013     1     1      542            540         2      923
+4  2013     1     1      544            545        -1     1004
+5  2013     1     1      554            600        -6      812
+# ℹ 26,999 more rows
+# ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
+#   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+#   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="what-goes-wrong-here" class="slide level2">
+<h2>What goes wrong here?</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="at">month =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
+<img data-src="figures/dplyr-error.png" class="r-stretch"><div class="fragment">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 27,004 × 19
+   year month   day dep_time sched_dep_time dep_delay arr_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+1  2013     1     1      517            515         2      830
+2  2013     1     1      533            529         4      850
+3  2013     1     1      542            540         2      923
+4  2013     1     1      544            545        -1     1004
+5  2013     1     1      554            600        -6      812
+# ℹ 26,999 more rows
+# ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
+#   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+#   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="section-1" class="slide level2" data-background-image="figures/dplyr-mutate.png" data-background-size="60%">
+<h2></h2>
+<div class="footer">
+<p>Artwork by <span class="citation" data-cites="allison_horst">@allison_horst</span></p>
+</div>
+</section>
+<section id="mutate-syntax" class="slide level2">
+<h2><code>mutate()</code> syntax</h2>
+<center>
+<code>DATA |&gt; mutate(VARIABLE = EXPRESSION)</code>
+</center>
+<p>If <code>VARIABLE</code> already exists, it modifies the column; otherwise, it will create a new one.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 20
+   year month   day dep_time sched_dep_time dep_delay arr_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+1  2013     1     1      517            515         2      830
+2  2013     1     1      533            529         4      850
+3  2013     1     1      542            540         2      923
+4  2013     1     1      544            545        -1     1004
+5  2013     1     1      554            600        -6      812
+# ℹ 336,771 more rows
+# ℹ 13 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
+#   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+#   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, gain &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="you-can-put-multiple-mutations-together-or-separately" class="slide level2">
+<h2><span class="r-fit-text">You can put multiple mutations together, or separately</span></h2>
+<p>These two are identical:</p>
+<div class="columns">
+<div class="column">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb27-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay, </span>
+<span id="cb27-3"><a href=""></a>         <span class="at">speed =</span> distance <span class="sc">/</span> (air_time <span class="sc">/</span> <span class="dv">60</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 21
+   year month   day dep_time sched_dep_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+1  2013     1     1      517            515
+2  2013     1     1      533            529
+3  2013     1     1      542            540
+4  2013     1     1      544            545
+5  2013     1     1      554            600
+# ℹ 336,771 more rows
+# ℹ 16 more variables: dep_delay &lt;dbl&gt;,
+#   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, gain &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+</div><div class="column">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay) <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">speed =</span> distance <span class="sc">/</span> (air_time <span class="sc">/</span> <span class="dv">60</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 21
+   year month   day dep_time sched_dep_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+1  2013     1     1      517            515
+2  2013     1     1      533            529
+3  2013     1     1      542            540
+4  2013     1     1      544            545
+5  2013     1     1      554            600
+# ℹ 336,771 more rows
+# ℹ 16 more variables: dep_delay &lt;dbl&gt;,
+#   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, gain &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="we-can-also-compare-them-properly" class="slide level2">
+<h2><span class="r-fit-text">We can also compare them properly :)</span></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a>v1 <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span> </span>
+<span id="cb31-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay, </span>
+<span id="cb31-3"><a href=""></a>         <span class="at">speed =</span> distance <span class="sc">/</span> (air_time <span class="sc">/</span> <span class="dv">60</span>))</span>
+<span id="cb31-4"><a href=""></a></span>
+<span id="cb31-5"><a href=""></a>v2 <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span> </span>
+<span id="cb31-6"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay) <span class="sc">|&gt;</span> </span>
+<span id="cb31-7"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">speed =</span> distance <span class="sc">/</span> (air_time <span class="sc">/</span> <span class="dv">60</span>))</span>
+<span id="cb31-8"><a href=""></a></span>
+<span id="cb31-9"><a href=""></a><span class="fu">identical</span>(v1, v2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+<section id="something-about-design" class="slide level2">
+<h2>Something about design</h2>
+<p>By default, columns are mutated in the end of the data frame, what if you want to put them at position xxxx? How do I do something like this?</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 20
+   gain  year month   day dep_time sched_dep_time
+  &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+1    -9  2013     1     1      517            515
+2   -16  2013     1     1      533            529
+3   -31  2013     1     1      542            540
+4    17  2013     1     1      544            545
+5    19  2013     1     1      554            600
+# ℹ 1 more row
+# ℹ 14 more variables: dep_delay &lt;dbl&gt;,
+#   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>Part of the reason <code>tidyverse</code> is neat is that it makes things easy. But define easy …</p>
+</div>
+<div class="fragment">
+<p>You will <em>expect</em> for every main task, you don’t need to do much for small tweaks.</p>
+</div>
+</section>
+<section id="your-time" class="slide level2">
+<h2>Your time</h2>
+<p>Read the documentation of <code>mutate()</code> and modify the following code to put the <code>gain</code> column:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>as the first column,</li>
+<li>after the <code>day</code> variable, and</li>
+<li>keep only the columns used to create the <code>gain</code> column</li>
+</ul>
+</section>
+<section id="solution" class="slide level2">
+<h2>Solution</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay, <span class="at">.before =</span> <span class="dv">1</span>) </span>
+<span id="cb35-2"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay, <span class="at">.after =</span> day)</span>
+<span id="cb35-3"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay, <span class="at">.keep =</span> <span class="st">"used"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Why these arguments have “.” in front of everything?</p>
+<div class="fragment">
+<div class="fragment">
+<ul>
+<li><em>Function developer</em> needs to accommodate the fact that users will do all sorts of things with their functions, e.g.&nbsp;you may name a column <code>after</code> for the number of mins after the scheduled time</li>
+<li>If <code>after</code> is also an argument name inside <code>mutate()</code>, it will then be confusing whether you are referring to the column or the argument.</li>
+<li>Prefixing the argument name with <code>.</code> avoids this problem – <strong>it’s a good practice</strong>.</li>
+</ul>
+<p>I don’t say you should prefix all your variables with <code>.</code>, but package developers should do that for good practice.</p>
+</div>
+</div>
+</section>
+<section>
+<section id="sorry-allison-horst-doesnt-have-art-illustration-for-group_by-and-summarize" class="title-slide slide level1 center">
+<h1>Sorry, Allison Horst doesn’t have art illustration for <code>group_by()</code> and <code>summarize()</code></h1>
 
-<img data-src="dplyr_files/figure-revealjs/unnamed-chunk-1-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+</section>
+<section id="group_by-and-summarize-syntax" class="slide level2">
+<h2><span class="r-fit-text"><code>group_by()</code> and <code>summarize()</code> syntax</span></h2>
+<center>
+<code>DATA |&gt; group_by(VARIABLEs) |&gt; summarize(EXPRESSION)</code>
+</center>
+<p>Example:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">group_by</span>(month)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 19
+# Groups:   month [12]
+   year month   day dep_time sched_dep_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+1  2013     1     1      517            515
+2  2013     1     1      533            529
+3  2013     1     1      542            540
+4  2013     1     1      544            545
+5  2013     1     1      554            600
+# ℹ 336,771 more rows
+# ℹ 14 more variables: dep_delay &lt;dbl&gt;,
+#   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+</div>
+</div>
+<p>The header tells you that the data is grouped by <code>month</code> and there are 12 groups (12 months).</p>
+</section>
+<section id="example-group_by-summarize" class="slide level2">
+<h2><span class="r-fit-text">Example: <code>group_by()</code> + <code>summarize()</code></span></h2>
+<div class="columns">
+<div class="column">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a>flights <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href=""></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span></span>
+<span id="cb38-3"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">avg_dep_delay =</span> <span class="fu">mean</span>(dep_delay))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+  month avg_dep_delay
+  &lt;int&gt;         &lt;dbl&gt;
+1     1            NA
+2     2            NA
+3     3            NA
+4     4            NA
+5     5            NA
+# ℹ 7 more rows</code></pre>
+</div>
+</div>
+</div><div class="column">
+<div class="fragment">
+<p>I hope you remember:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a>flights <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href=""></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span></span>
+<span id="cb40-3"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">avg_dep_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+  month avg_dep_delay
+  &lt;int&gt;         &lt;dbl&gt;
+1     1          10.0
+2     2          10.8
+3     3          13.2
+4     4          13.9
+5     5          13.0
+# ℹ 7 more rows</code></pre>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="of-course-you-can-do-multiple-summaries" class="slide level2">
+<h2><span class="r-fit-text">Of course, you can do multiple summaries</span></h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href=""></a>flights <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href=""></a>  <span class="fu">group_by</span>(month, origin) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">avg_dep_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb42-4"><a href=""></a>            <span class="at">avg_arr_delay =</span> <span class="fu">mean</span>(arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 36 × 4
+# Groups:   month [12]
+  month origin avg_dep_delay avg_arr_delay
+  &lt;int&gt; &lt;chr&gt;          &lt;dbl&gt;         &lt;dbl&gt;
+1     1 EWR            14.9          12.8 
+2     1 JFK             8.62          1.37
+3     1 LGA             5.64          3.38
+4     2 EWR            13.1           8.78
+5     2 JFK            11.8           4.39
+# ℹ 31 more rows</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>But the following means summarize <code>avg_dep_delay</code> first, then summarize <code>avg_arr_delay</code> from the result of the first summary, which is not what we want:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href=""></a>flights <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href=""></a>  <span class="fu">group_by</span>(month, origin) <span class="sc">|&gt;</span></span>
+<span id="cb44-3"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">avg_dep_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb44-4"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">avg_arr_delay =</span> <span class="fu">mean</span>(arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="decompose-a-problem-into-dplyr-verbs" class="slide level2 scrollable">
+<h2><span class="r-fit-text">Decompose a problem into dplyr verbs</span></h2>
+<p><strong>Task: We want to sumamrize the proportion of flights with departure delay larger than 2 hours.</strong></p>
+<div class="fragment">
+<p>Thought process:</p>
+<ol type="1">
+<li>I need label the rows as whether they are delay more than 2 hrs or not.</li>
+</ol>
+</div>
+<div class="fragment">
+<p>This sounds like a <code>mutate()</code> and we learn the “larger than 2 hrs” part in <code>filter()</code></p>
+</div>
+<div class="fragment">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb45-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">over_2h_delay =</span> dep_delay <span class="sc">&gt;</span> <span class="dv">120</span>, <span class="at">.keep =</span> <span class="st">"used"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 2
+  dep_delay over_2h_delay
+      &lt;dbl&gt; &lt;lgl&gt;        
+1         2 FALSE        
+2         4 FALSE        
+3         2 FALSE        
+4        -1 FALSE        
+5        -6 FALSE        
+# ℹ 336,771 more rows</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="decompose-a-problem-into-dplyr-verbs-1" class="slide level2 scrollable">
+<h2><span class="r-fit-text">Decompose a problem into dplyr verbs</span></h2>
+<p><strong>Task: We want to sumamrize the proportion of flights with departure delay larger than 2 hours.</strong></p>
+<p>Thought process:</p>
+<ol type="1">
+<li>I need label the rows as whether they are delay more than 2 hrs or not.<br>
+</li>
+<li>Then I need to count the number of observations for over and below 2h delay.</li>
+</ol>
+<div class="fragment">
+<p>This sounds like <code>group_by()</code> and <code>summarize()</code>, but I want what’s inside <code>summarise()</code> to be the count</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb47-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">over_2h_delay =</span> dep_delay <span class="sc">&gt;</span> <span class="dv">120</span>, <span class="at">.keep =</span> <span class="st">"used"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb47-3"><a href=""></a>  <span class="fu">group_by</span>(over_2h_delay) <span class="sc">|&gt;</span></span>
+<span id="cb47-4"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  over_2h_delay      n
+  &lt;lgl&gt;          &lt;int&gt;
+1 FALSE         318798
+2 TRUE            9723
+3 NA              8255</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="decompose-a-problem-into-dplyr-verbs-2" class="slide level2 scrollable">
+<h2><span class="r-fit-text">Decompose a problem into dplyr verbs</span></h2>
+<p><strong>Task: We want to sumamrize the proportion of flights with departure delay larger than 2 hours.</strong></p>
+<p>Thought process:</p>
+<ol type="1">
+<li>I need label the rows as whether they are delay more than 2 hrs or not.<br>
+</li>
+<li>Then I need to count the number of observations for over and below 2h delay.</li>
+<li>Then I need to calculate proportion based on <code>n</code>.</li>
+</ol>
+<div class="fragment">
+<p>This sounds like <code>mutate()</code> again</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href=""></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb49-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">over_2h_delay =</span> dep_delay <span class="sc">&gt;</span> <span class="dv">120</span>, <span class="at">.keep =</span> <span class="st">"used"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb49-3"><a href=""></a>  <span class="fu">group_by</span>(over_2h_delay) <span class="sc">|&gt;</span></span>
+<span id="cb49-4"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb49-5"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">prop =</span> n<span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  over_2h_delay      n  prop
+  &lt;lgl&gt;          &lt;int&gt; &lt;dbl&gt;
+1 FALSE         318798 94.7 
+2 TRUE            9723  2.89
+3 NA              8255  2.45</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="decompose-a-problem-into-dplyr-verbs-3" class="slide level2">
+<h2><span class="r-fit-text">Decompose a problem into dplyr verbs</span></h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p>Can we look at those NAs?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href=""></a>flights <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="fu">is.na</span>(dep_delay))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8,255 × 19
+   year month   day dep_time sched_dep_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+1  2013     1     1       NA           1630
+2  2013     1     1       NA           1935
+3  2013     1     1       NA           1500
+4  2013     1     1       NA            600
+5  2013     1     2       NA           1540
+# ℹ 8,250 more rows
+# ℹ 14 more variables: dep_delay &lt;dbl&gt;,
+#   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+</div>
+</div>
+<p>There are records with no arrival and departure time - we will need to keep them in mind about this data.</p>
+</div><div class="column" style="width:53%;">
+<p>Why can’t you do</p>
+<center>
+<code>filter(dep_delay == NA)</code>?
+</center>
+<p>This is not legit because comparing anything with <code>NA</code> gives an <code>NA</code> (rather than giving <code>FALSE</code>):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href=""></a><span class="dv">1</span> <span class="sc">==</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href=""></a><span class="dv">2</span><span class="sc">!=</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="your-time-1" class="slide level2 scrollable">
+<h2>Your time</h2>
+<p>With the <code>mtcars</code> data:</p>
+<ol type="1">
+<li>Convert the <code>mpg</code> variable into <code>kpl</code> (1 mpg = 0.425144 km/l)</li>
+<li>Only look at V-shaped engine <em>Hint: look at the documentation to see what this means</em></li>
+<li>Find the average <code>kpl</code> and <code>disp</code> for each number of cylinders</li>
+<li>Arrange the result by <code>disp</code> in descending order <em>Hint: look through <code>dplyr</code> reference page to find what’s the verb for this task</em></li>
+</ol>
+
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">

@@ -188,6 +188,9 @@ function(arguments)
 pipe: `function2(function(arguments), arguments)`: `function(arguments) |> function2(arguments)`
 `|>` and `%>%`
 
+`Command + z` to undo what you just did 
+`Command + y` to redo what you just undid
+
 
 ## Best practice
 
@@ -403,6 +406,6 @@ mean(nycflights13::flights$arr_delay, na.rm = TRUE)
 Practice what we've just learn via
 
 ```{r eval = FALSE}
-usethis::create_from_github("SDS322E-2025FALL/basics")
+usethis::create_from_github("SDS322E-2025FALL/0103-basics")
 ```
 
