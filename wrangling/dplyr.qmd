@@ -20,6 +20,18 @@ library(tidyverse)
 library(nycflights13)
 ```
 
+## Learning objective
+
+We will learn the five most basic `dplyr` verbs to wrangle data, including:
+
+- `filter()`: filter rows by a predicate
+- `mutate()`: create or modify variables
+- `group_by()`: group data by one or more variables
+- `summarize()`: summarize data by groups
+- `arrange()`: sort data by one or more variables
+
+These are the fundamentals for building up more complex data wrangling, which will be covered in the next few weeks.
+
 ## {background-image="figures/dplyr-filter.png" background-size="90%"}
 
 
