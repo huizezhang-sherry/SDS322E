@@ -24,6 +24,8 @@ flights$origin |> unique()
 # What goes wrong here?
 flights |> filter(month = 1)
 
+#################################################################################
+#################################################################################
 # `mutate()` allows you to
 flights |> mutate(gain = dep_delay - arr_delay)
 flights |>
@@ -40,6 +42,8 @@ flights |> mutate(gain = dep_delay - arr_delay, .before = 1)
 flights |> mutate(gain = dep_delay - arr_delay, .after = day)
 flights |> mutate(gain = dep_delay - arr_delay, .keep = "used")
 
+#################################################################################
+#################################################################################
 # `group_by()` and `summary()`
 flights |> group_by(month)
 flights |>
@@ -61,3 +65,38 @@ flights |>
   summarize(avg_dep_delay = mean(dep_delay, na.rm = TRUE)) |>
   summarize(avg_arr_delay = mean(arr_delay, na.rm = TRUE))
 
+#################################################################################
+#################################################################################
+# arrange() by increasing order
+flights |>
+  group_by(carrier) |>
+  summarize(avg_dep_delay = mean(arr_delay, na.rm = TRUE)) |>
+  arrange(avg_dep_delay)
+
+# arrange() by decreasing order
+flights |>
+  group_by(carrier) |>
+  summarize(avg_dep_delay = mean(arr_delay, na.rm = TRUE)) |>
+  arrange(-avg_dep_delay)
+
+# this would also work
+flights |>
+  group_by(carrier) |>
+  summarize(avg_dep_delay = mean(arr_delay, na.rm = TRUE)) |>
+  arrange(desc(avg_dep_delay))
+
+#################################################################################
+#################################################################################
+flights |>
+  mutate(over_2h_delay = dep_delay > 120, .keep = "used")
+
+flights |>
+  mutate(over_2h_delay = dep_delay > 120, .keep = "used") |>
+  group_by(over_2h_delay) |>
+  summarise(n = n())
+
+flights |>
+  mutate(over_2h_delay = dep_delay > 120, .keep = "used") |>
+  group_by(over_2h_delay) |>
+  summarise(n = n()) |>
+  mutate(prop = n/ sum(n) * 100)

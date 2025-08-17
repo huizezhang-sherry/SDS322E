@@ -231,7 +231,7 @@ I don't say you should prefix all your variables with `.`, but package developer
 # Sorry, Allison Horst doesn't have art illustration for  `group_by()` and `summarize()`
 
 
-## [`group_by()` and `summarize()` syntax]{.r-fit-text}
+## `group_by()` and `summarize()`
 
 <center>```DATA |> group_by(VARIABLEs) |> summarize(EXPRESSION)```</center>
 
@@ -243,7 +243,7 @@ flights |> group_by(month)
 
 The header tells you that the data is grouped by `month` and there are 12 groups (12 months).
 
-## [Example: `group_by()` + `summarize()`]{.r-fit-text}
+## Example
 
 ::::{.columns}
 :::{.column}
@@ -259,18 +259,30 @@ flights |>
 :::{.column}
 :::{.fragment}
 
-
 I hope you remember:
 
 ```{r}
 flights |>
   group_by(month) |>
-  summarize(avg_dep_delay = mean(dep_delay, na.rm = TRUE))
+  summarize(avg_dep_delay = 
+              mean(dep_delay, na.rm = TRUE))
 ```
 :::
 :::
 
 ::::
+
+## But notice `summarize()` and `summary()` are two different verbs
+
+* `summarize()` is a dplyr verb to summarize groups in a way you specified
+* `summary()` is a base R function to provide the 5 number summary (min, quantile, median, mean, max) for each variable in a data frame
+
+```{r}
+summary(flights$dep_delay)
+summary(flights)
+```
+
+
 
 ## [Of course, you can do multiple summaries]{.r-fit-text}
 
@@ -292,7 +304,85 @@ flights |>
   summarize(avg_arr_delay = mean(arr_delay, na.rm = TRUE))
 ```
 
-## [Decompose a problem into dplyr verbs]{.r-fit-text}
+## [Let me sneak in a new verb: `arrange()`]{.r-fit-text}
+
+Sometimes, we may wish to have the result sorted by a variable, this can be done with `arrange()`:
+
+::::{.columns}
+
+:::{.column}
+
+```{r echo = FALSE}
+options(pillar.print_max = 10, pillar.print_min = 10)
+```
+
+
+```{r}
+flights |>
+  group_by(carrier) |>
+  summarize(avg_dep_delay = 
+              mean(arr_delay, na.rm = TRUE))
+```
+
+:::
+
+:::{.column}
+:::{.fragment}
+
+```{r}
+flights |>
+  group_by(carrier) |>
+  summarize(avg_dep_delay = 
+              mean(arr_delay, na.rm = TRUE)) |> 
+  arrange(avg_dep_delay)
+```
+
+:::
+:::
+
+::::
+
+## [Let me sneak in a new verb: `arrange()`]{.r-fit-text}
+
+Sort by decreasing order can be done with either `-` or `desc()`:
+
+::::{.columns}
+
+:::{.column}
+
+```{r echo = FALSE}
+options(pillar.print_max = 20, pillar.print_min = 20)
+```
+
+
+```{r}
+flights |>
+  group_by(carrier) |>
+  summarize(avg_dep_delay = 
+              mean(arr_delay, na.rm = TRUE)) |> 
+  arrange(-avg_dep_delay)
+```
+
+:::
+
+:::{.column}
+
+```{r}
+flights |>
+  group_by(carrier) |>
+  summarize(avg_dep_delay = 
+              mean(arr_delay, na.rm = TRUE)) |> 
+  arrange(desc(avg_dep_delay))
+```
+
+:::
+
+::::
+
+
+# Combine everything together: Decompose a problem into dplyr verbs
+
+##
 
 **Task: We want to sumamrize the proportion of flights with departure delay larger than 2 hours.**
 
@@ -313,7 +403,7 @@ flights |>
   mutate(over_2h_delay = dep_delay > 120, .keep = "used") 
 ```
 
-## [Decompose a problem into dplyr verbs]{.r-fit-text}
+##
 
 **Task: We want to sumamrize the proportion of flights with departure delay larger than 2 hours.**
 
@@ -333,7 +423,7 @@ flights |>
   summarise(n = n())
 ```
 
-## [Decompose a problem into dplyr verbs]{.r-fit-text}
+## 
 
 **Task: We want to sumamrize the proportion of flights with departure delay larger than 2 hours.**
 
@@ -355,7 +445,11 @@ flights |>
   mutate(prop = n/ sum(n) * 100)
 ```
 
-## [Decompose a problem into dplyr verbs]{.r-fit-text}
+## Remark 1
+
+```{r echo = FALSE}
+options(pillar.print_max = 5, pillar.print_min = 5)
+```
 
 ::::{.columns}
 
@@ -372,6 +466,7 @@ There are records with no arrival and departure time - we will need to keep them
 
 :::{.column width="53%"}
 
+:::{.fragment}
 Why can't you do 
 
 <center>`filter(dep_delay == NA)`?</center>
@@ -383,13 +478,46 @@ This is not legit because comparing anything with `NA` gives an `NA` (rather tha
 2!= NA
 ```
 :::
+:::
 ::::
+
+## Remark 2
+
+`group_by(over_2h_delay) |> summarise(n = n())` can be simplified with a single command `dplyr::count(over_2h_delay)`.
+
+
+::::{.columns}
+
+:::{.column}
+```{r}
+flights |> 
+  mutate(over_2h_delay = dep_delay > 120, 
+         .keep = "used") |> 
+  group_by(over_2h_delay) |>
+  summarise(n = n()) |> 
+  mutate(prop = n/ sum(n) * 100)
+```
+
+:::
+
+:::{.column}
+```{r}
+flights |> 
+  mutate(over_2h_delay = dep_delay > 120, 
+         .keep = "used") |> 
+  count(over_2h_delay) |> 
+  mutate(prop = n/ sum(n) * 100)
+```
+:::
+
+::::
+
 
 ## Your time
 
-This is a lot - practice with 
+This is a lot! Practice what we've gone through with 
 
-```{r}
+```{r eval = FALSE}
 usethis::create_from_github("SDS322E-2025FALL/0203-dplyr")
 ```
 
