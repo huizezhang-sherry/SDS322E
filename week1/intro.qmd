@@ -1,6 +1,6 @@
 ---
 title: "Elements of Data Science <br> SDS 322E"
-author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> week 01 lecture 01 Fall 2025"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> Fall 2025"
 format: 
   revealjs:
     scrollable: true
@@ -16,163 +16,180 @@ format:
 knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
 ```
 
-## [SDS 322E: Elements of Data Science]{.r-fit-text} 
+## [SDS 322E: Elements of Data Science]{.r-fit-text}
 
-* Lecture: Monday / Wednesday / Friday 9-10am
-* Lab: Monday 3-4pm/ 4-5pm
-* Instructor: Sherry Zhang
-* Grad TA: Arka Sinha
-* UGCAs: Daniel, Luke, Vibhav
+-   Lecture: Monday / Wednesday / Friday 9-10am
+-   Lab: Monday 3-4pm (62525)/ 4-5pm (62530)
 
-## Learning objectives 
+. . .
 
-**End goal**: Become comfortable coding in R for both exploratory (week 1-8) and confirmatory analysis (week 9-14), and develop enough breadth of knowledge to know where to find the tools and information you need. 
+| Monday          | Tuesday | Wednesday      | Thursday       | Friday         |
+|-----------------|---------|----------------|----------------|----------------|
+| Lecture 9-10am  |         | Lecture 9-10am |                | Lecture 9-10am |
+| Lab 3pm or 4pm  |         |                |                |                |
+| Lab due 11:59pm |         |                | HW due 11:59pm |                |
+
+## Assessement
+
+-   **Labs (30%)** - Mostly coding assignments written using R Markdown. Best 10 out of 11, due Monday 11:59 pm week 3-13.
+-   **Homework (30%)** - Coding practice, done in groups. Best 5 out of 6, due Thursday 11:59 pm week 3-5, 10-12.
+-   **Projects (40%)** - Integrate skills on a topic of your choice, done in groups of your choice. 2 out of 2, due Thursday 11:59 pm week 8 and 14.
+-   **Exams (0%)** - There are no exams.
+
+## About me
+
+[hsherryzhang\@utexas.edu](mailto:hsherryzhang@utexas.edu){.email}
+
+:::::: columms
+::: {.column width="55%"}
+-   I'm a Postdoc Fellow at UT Austin
+
+-   I did my PhD in Monash University in Australia
+
+-   I work on visualization, statistical computing, and thinking about "what's the best way to do data analysis".
+
+-   I climb `r set.seed(123); emo::ji("climber")`
+:::
+
+::: {.column width="4%"}
+:::
+
+::: {.column width="38%"}
+![](figures/sherry.jpeg)
+:::
+::::::
+
+# Meet your Grad TA - Arka Sinha {.smaller}
+
+[as243932\@my.utexas.edu](mailto:as243932@my.utexas.edu){.email}
+
+## Meet your UGCAs {.smaller}
+
+::::: {.columns ncol="2"}
+::: column
+![](figures/luke.png){width="45%"}
+
+Luke:
+
+-   I am a Government and Humanities Senior.
+-   I am from Arlington, Texas.
+-   My favorite hobby is cooking.
+:::
+
+::: column
+![](figures/daniel.png){width="45%"}
+
+Daniel:
+
+-   I'm from San Antonio
+-   I also work at the Sanger Learning Center as a Peer Tutor
+-   I like to run with the Texas Running Club
+:::
+:::::
+
+## Learning objectives
+
+**End goal**: Become comfortable coding in R for both exploratory (week 1-8) and confirmatory analysis (week 9-14), and develop enough breadth of knowledge to know where to find the tools and information you need.
 
 . . .
 
 Specifically, you will learn:
 
-  * Program for data analysis in R using RStudio
-  * Wrangle and visualize data with the tidyverse
-  * Apply prediction and classification techniques
+-   Program for data analysis in R using RStudio
+-   Wrangle and visualize data with the tidyverse
+-   Apply prediction and classification techniques
 
+## Interaction & Communication
 
+-   Announcements in Canvas
 
-## Weekly schedule
+-   Ask questions after lecture (I usually reserve some time)
 
-| Monday| Tuesday | Wednesday | Thursday | Friday   | 
-|-----------------------|---|-----------|-----------------|------------------|
-| Lecture  9-10am  |         | Lecture 9-10am   | | Lecture 9-10am|
-| Lab 3pm or 4pm  |         |    |  | | 
-| Lab due 11:59pm  |         |   |HW due 11:59pm | |
+-   Office hours: Ask questions / Listen to others/ Review feedback on assignments
 
+## Interaction & Communication
 
-<br>
+-   Email
 
-No dues on Friday and weekends :)
-
-## Assessement
-
-* **Labs (30%)** - Mostly coding assignments written using R Markdown. Best 10 out of 11, due Monday 11:59 pm week 3-13
-* **Homework (30%)** - Coding practice, done in groups. Best 5 out of 6, due Thursday 11:59 pm week 3-5, 10-12
-* **Projects (40%)** - Integrate skills on a topic of your choice, done in groups of your choice. 2 out of 2, due Thursday 11:59 pm week 8 and 14
-* **Exams (0%)** - There are no exams
-
-## Interaction & Communication {.smaller}
-
-* Announcements in Canvas
-
-* Ask questions after lecture (I usually reserve some time)
-
-* Office hours: Ask questions / Listen to others/ Review feedback on assignments
-
-* Email
-  * Subject: include course code (322E), lab time, reason for emailing
-  * Plan ahead: I will get back to you within 1-2 business days
-  * Don’t expect answers during the weekend or after 5pm
+    -   Subject: include course code (SDS 322E), reason for emailing
+    -   Plan ahead: I will get back to you within 1-2 business days
+    -   Don’t expect answers during the weekend or after 5pm
 
 # Questions?
 
-## Hello, I'm Sherry 
-
-::::{.columms}
-
-:::{.column width="60%"}
-
- - I'm a Postdoc Fellow in SDS. I did my PhD in Monash University in Australia. 
- 
- - I work on visualization, statistical computing, and thinking about "what's the best way to do data analysis".
- 
- - I climb `r set.seed(123); emo::ji("climber")`, and occasionally run. 
-
-:::
-
-:::{.column width="38%"}
-![](figures/sherry.jpeg)
-:::
-
-::::
-
-
-## Meet your TA and UGCAs
-
-# Trick 101 to make you slightly more comfortable in R and RStudio
+# Tricks and tips to make you slightly more comfortable in R and RStudio
 
 ## Install R and RStudio
 
-* R is available for free: <https://cloud.r-project.org/>
-* RStudio can be downloaded for free from the Posit website: <https://posit.co/download/rstudio-desktop/>
+-   R is available for free: <https://cloud.r-project.org/>
+-   RStudio can be downloaded for free from the Posit website: <https://posit.co/download/rstudio-desktop/>
 
 Even if you installed R/RStudio previously, it's important to have the latest version
 
-* R version 4.5.1 
-  * Check your current version with `R.version`
-* RStudio version 2025.05.1-513
+-   R version 4.5.1
+    -   Check your current version with `R.version`
+-   RStudio version 2025.05.1-513
 
 ## RStudio IDE
 
 <center>![](figures/rstudio.png){width="90%"}</center>
 
-## Your time {.smaller}
+## [Change the appearance of your RStudio IDE]{.r-fit-text} {.smaller}
 
-Change the appearance of your RStudio IDE: 
-
-  * Press `Command + ,` to pull out the options panel
-  * Select the Appearance tab and find your favorite Editor font and theme
+-   Go to `Tools > Global Options` (or Press `Command + ,`) to pull out the options panel 
+-   Select the Appearance tab and find your favorite Editor font and theme
 
 <center>![](figures/rstudio-appearance.png){width="80%"}</center>
 
-## Git and GitHub 
+## Git and GitHub
 
-General speaking, you can navigate the course without knowing anything about Git and GitHub, but you will be able to see and know many things you would otherwise won't if you do know a little bit. 
+General speaking, you can navigate the course without knowing anything about Git and GitHub, but you will be able to see and know many things you would otherwise won't if you do know a little bit.
 
-  - If you know how to browse GitHub, you can see the source code of the packages we use in the course, and you can also see the source code of the lecture slides.
+-   If you know how to browse GitHub, you can see the source code of the packages we use in the course, and you can also see the source code of the lecture slides.
 
-  - Happy Git with R: <https://happygitwithr.com/>
-  
+-   Happy Git with R: <https://happygitwithr.com/>
+
 ## Find the `pkgdown` site of a package {.smaller background-image="figures/dplyr-pkgdown-1.png" background-size="65%" background-position="50% 70%"}
 
 Go to <https://github.com/tidyverse/dplyr> and click the package link:
 
-## {.smaller}
+##  {.smaller}
 
 The `pkgdown` site contains the exact same information as `?PKG::FUN()` but the HTML version is much better formatted.
 
-::::{.columns}
-
-:::{.column}
-
+::::: columns
+::: column
 From the pkgdown site:
 
 ![](figures/summarize-pkgdown.png)
-
 :::
 
-:::{.column}
-
+::: column
 From `?dplyr::summarise`:
 
 ![](figures/summarize-help.png)
-
 :::
-
-
-::::
+:::::
 
 ## 
 
-The `pkgdown` sites also have more detailed vignettes (aka articles) about the package: 
+The `pkgdown` sites also have more detailed vignettes (aka articles) about the package:
 
 <center>![](figures/pkgdown-get-started.png)</center>
 
-
 ## Coding is never memorization!
 
-Ask anyone you know working with data or software to write down what they just code on a piece of paper: fail...
+Ask anyone you know who works with data or software to write down their code on paper in one go...
 
-<br> <br>
+. . .
 
-<center>What I mean by this `r set.seed(1234); emo::ji("arrow")`</center>
+<center>It is almost guaranteed to fail.</center>
+
+. . .
+
+<br><br>
+
+<center>Let's see this through an emoji example `r emo::ji("banana")` `r emo::ji("monkey")` `r emo::ji("eyes")` `r emo::ji("computer")` `r set.seed(1234); emo::ji("arrow")`</center>
 
 ## [Example: search and install from GitHub]{.r-fit-text} {.smaller}
 
@@ -183,6 +200,8 @@ emo::ji("evil")
 ```
 
 > Error in loadNamespace(x) : there is no package called ‘emo’
+
+. . .
 
 Okay... I don't have the package in my lastest R installation, let's install it...
 
@@ -196,13 +215,15 @@ install.packages("emo")
 
 Aha - it's GitHub package (I know it is written by Hadley Wickham), let me find it:
 
-```         
-Google: emo ji Hadley github
-```
+<center>Google: emo ji Hadley github</center>
 
 and find this:
 
 <center>![](figures/emoji-github.png)</center>
+
+## [Example: search and install from GitHub]{.r-fit-text}
+
+<center>![](figures/emoji-github-2.png)</center>
 
 ## [Example: search and install from GitHub]{.r-fit-text}
 
@@ -213,28 +234,70 @@ Scroll down to find this line, and run it in your console:
 devtools::install_github("hadley/emo")
 ```
 
+. . .
+
 Now I can use the package:
 
 ```{r}
 emo::ji("devil")
+emo::ji("heart")
+emo::ji("computer")
+emo::ji("climber")
 ```
 
-Lesson learnt:
+## [Example: search and install from GitHub]{.r-fit-text}
 
--   No one can write the code in one go, we use a lot of helps ... and Google!
--   btw you just learned how to install a package both from CRAN (`install.packages()`) and from GitHub (`remotes::install_github()`).
+If I want to use functions from a pacakge multiple times, it is easier to load the package first: `library(pkg)`
 
-## Your time {.smaller}
+```{r}
+library(emo)
+ji("climber")
+ji("aeroplane")
+ji("computer")
+```
 
-- Install and load the `tidyverse` package from CRAN
-  * Install: `install.packages("tidyverse")` 
-  * Load: `library(tidyverse)`
+. . .
 
-- (advance) Install and load the `emo` package from GitHub
+What happen if you don't?
 
-  * Install the CRAN package `devtools` first: `install.packages("devtools")`
-  * Install the `emo` package from GitHub: `devtools::install_github("hadley/emo")`
-  * Load the library: `library(emo)`
-  * Print your favorite emoji, e.g. `emo::ji("heart")`
+```{r eval=FALSE}
+ji("climber")
+```
 
-  
+> Error in ji("climber") : could not find function "ji"
+
+## Lesson learnt
+
+-   No one can write the code in one go, there are lots of trials and errors. Along the way, we use a lot of helps, including Google!
+
+-   Btw you just happen to know how to
+
+    -   install a package from CRAN: `install.packages()` and from GitHub: `devtools::install_github()`
+
+    -   load a package: `library()`
+
+## Your time (1/2) {.smaller}
+
+-   Install R and RStudio if you have not yet
+
+-   Change the appearance of your RStudio IDE:
+
+    -   Go to `Tools > Global Options` (or Press `Command + ,`) to pull out the options panel 
+
+    -   Select the Pane Layout tab to move around the panes
+    
+    - Select the Appearance tab and find your favorite Editor font and theme
+
+## Your time (2/2) {.smaller}
+
+-   Install and load the `tidyverse` package from CRAN
+
+    -   Install: `install.packages("tidyverse")`
+    -   Load: `library(tidyverse)`
+
+-   (advance) Install and load the `emo` package from GitHub
+
+    -   Install the CRAN package `devtools` first: `install.packages("devtools")`
+    -   Install the `emo` package from GitHub: `devtools::install_github("hadley/emo")`
+    -   Load the library: `library(emo)`
+    -   Print your favorite emoji, e.g. `emo::ji("heart")`
