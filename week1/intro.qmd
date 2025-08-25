@@ -132,14 +132,14 @@ Even if you installed R/RStudio previously, it's important to have the latest ve
 
 ## RStudio IDE
 
-<center>![](figures/rstudio.png){width="90%"}</center>
+<center>![](figures/rstudio.png){width="80%"}</center>
 
 ## [Change the appearance of your RStudio IDE]{.r-fit-text} {.smaller}
 
 -   Go to `Tools > Global Options` (or Press `Command + ,`) to pull out the options panel 
 -   Select the Appearance tab and find your favorite Editor font and theme
 
-<center>![](figures/rstudio-appearance.png){width="80%"}</center>
+<center>![](figures/rstudio-appearance.png){width="60%"}</center>
 
 ## Git and GitHub
 
@@ -149,9 +149,11 @@ General speaking, you can navigate the course without knowing anything about Git
 
 -   Happy Git with R: <https://happygitwithr.com/>
 
-## Find the `pkgdown` site of a package {.smaller background-image="figures/dplyr-pkgdown-1.png" background-size="65%" background-position="50% 70%"}
+## Find the `pkgdown` site of a package
 
 Go to <https://github.com/tidyverse/dplyr> and click the package link:
+
+<center>![](figures/dplyr-pkgdown-1.png){width="80%"}</center>
 
 ##  {.smaller}
 
@@ -161,13 +163,13 @@ The `pkgdown` site contains the exact same information as `?PKG::FUN()` but the 
 ::: column
 From the pkgdown site:
 
-![](figures/summarize-pkgdown.png)
+![](figures/summarize-pkgdown.png){width="80%"}
 :::
 
 ::: column
 From `?dplyr::summarise`:
 
-![](figures/summarize-help.png)
+![](figures/summarize-help.png){width="80%"}
 :::
 :::::
 
@@ -175,13 +177,15 @@ From `?dplyr::summarise`:
 
 The `pkgdown` sites also have more detailed vignettes (aka articles) about the package:
 
-<center>![](figures/pkgdown-get-started.png)</center>
+<center>![](figures/pkgdown-get-started.png){width="60%"}</center>
 
 ## Coding is never memorization!
 
 Ask anyone you know who works with data or software to write down their code on paper in one go...
 
 . . .
+
+<br><br>
 
 <center>It is almost guaranteed to fail.</center>
 
@@ -219,11 +223,11 @@ Aha - it's GitHub package (I know it is written by Hadley Wickham), let me find 
 
 and find this:
 
-<center>![](figures/emoji-github.png)</center>
+<center>![](figures/emoji-github.png){width="60%"}</center>
 
 ## [Example: search and install from GitHub]{.r-fit-text}
 
-<center>![](figures/emoji-github-2.png)</center>
+<center>![](figures/emoji-github-2.png){width="70%"}</center>
 
 ## [Example: search and install from GitHub]{.r-fit-text}
 

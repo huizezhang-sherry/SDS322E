@@ -1,6 +1,6 @@
 ---
-title: "Elements of Data Science SDS 322E"
-author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin"
+title: "Elements of Data Science <br> SDS 322E"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> Fall 2025"
 format: 
   revealjs:
     scrollable: true
@@ -16,7 +16,7 @@ format:
 knitr::opts_chunk$set(echo = TRUE, eval = TRUE)
 ```
 
-## Class to Brainrot 
+## Learning objectives
 
 * Being able to work with an R Markdown document — Your labs/HWs/Projects will be provided in this format, and you’ll need to knit them into a PDF for submission.
 
@@ -115,12 +115,14 @@ File > New File > Quarto Document / R Markdown
 
 
 
-## 
+## Your time
 
-Sorry, but you will stuck with me for the rest of the class.
+```{r eval = FALSE}
+install.packages("usethis")
+usethis::create_from_github("SDS322E-2025Fall/0102-welcome", fork = FALSE)
+```
 
-
-<center>![](figures/rmarkdown-welcome.png){width="80%"}</center>
+<center>![](figures/rmarkdown-welcome.png){width="70%"}</center>
 
 
 

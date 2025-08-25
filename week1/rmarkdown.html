@@ -9,8 +9,8 @@
 <link href="rmarkdown_files/libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.30">
 
-  <meta name="author" content="H. Sherry Zhang   Department of Statistics and Data Sciences   The University of Texas at Austin">
-  <title>Elements of Data Science SDS 322E</title>
+  <meta name="author" content="H. Sherry Zhang   Department of Statistics and Data Sciences   The University of Texas at Austin     Fall 2025">
+  <title>Elements of Data Science   SDS 322E</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -28,6 +28,72 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="rmarkdown_files/libs/revealjs/dist/theme/quarto-816793a8a4a837d14f6ea458e2f1c5cb.css">
   <link href="rmarkdown_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -128,19 +194,19 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Elements of Data Science SDS 322E</h1>
+  <h1 class="title">Elements of Data Science <br> SDS 322E</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin 
+H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br> <br> Fall 2025 
 </div>
 </div>
 </div>
 
 </section>
-<section id="class-to-brainrot" class="slide level2">
-<h2>Class to Brainrot</h2>
+<section id="learning-objectives" class="slide level2">
+<h2>Learning objectives</h2>
 <ul>
 <li>Being able to work with an R Markdown document — Your labs/HWs/Projects will be provided in this format, and you’ll need to knit them into a PDF for submission.</li>
 </ul>
@@ -222,11 +288,14 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <img data-src="figures/website.png" style="width:80.0%">
 </center>
 </section>
-<section id="section-3" class="slide level2">
-<h2></h2>
-<p>Sorry, but you will stuck with me for the rest of the class.</p>
+<section id="your-time" class="slide level2">
+<h2>Your time</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">install.packages</span>(<span class="st">"usethis"</span>)</span>
+<span id="cb2-2"><a href=""></a>usethis<span class="sc">::</span><span class="fu">create_from_github</span>(<span class="st">"SDS322E-2025Fall/0102-welcome"</span>, <span class="at">fork =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <center>
-<img data-src="figures/rmarkdown-welcome.png" style="width:80.0%">
+<img data-src="figures/rmarkdown-welcome.png" style="width:70.0%">
 </center>
 
 </section>
