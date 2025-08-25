@@ -207,15 +207,14 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 </section>
 <section id="r-history-and-ecosystem" class="slide level2">
 <h2>R history and ecosystem</h2>
-<p>S (Roger’s week 2 slides)</p>
-<p>Base R + packages</p>
-</section>
-<section id="why-data-science" class="slide level2">
-<h2>Why data science</h2>
+<ul>
+<li><p>1976: S was initiated as an internal statistical analysis environment—originally implemented as Fortran libraries. S is a language that was developed by <strong>John Chambers</strong> and others at Bell Labs.</p></li>
+<li><p>1991: Created in New Zealand by <strong>Ross Ihaka</strong> and <strong>Robert Gentleman</strong>. Their experience developing R is documented in a 1996 JCGS paper.</p></li>
+<li><p>1997: The R Core Group is formed (containing some people associated with S-PLUS). The core group controls the source code for R. See more about the Foundation: <a href="https://www.r-project.org/foundation/" class="uri">https://www.r-project.org/foundation/</a></p></li>
+</ul>
 </section>
 <section id="why-r" class="slide level2">
 <h2>Why R?</h2>
-<p>You don’t need to write FORTRAN code to do data analysis!</p>
 <p>R code:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(tidyverse)</span>
@@ -306,13 +305,58 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <span id="cb2-70"><a href=""></a><span class="kw">end program</span> mtcars_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="the-big-picture" class="slide level2">
-<h2>The big picture</h2>
+<section id="r-ecosystem" class="slide level2">
+<h2>R ecosystem</h2>
+<ul>
+<li><p><strong>Base packages</strong>: base, methods, datasets, utils, grDevices, graphics, stats</p></li>
+<li><p><strong>Recommended packages</strong>: MASS, lattice, Matrix, nlme, survival, boot, cluster, codetools, foreign, KernSmooth, rpart, spatial, splines, tcltk</p></li>
+<li><p><strong>Contributed packages</strong>: 20,000 + packages contributed by users available on CRAN or Bioconductor (<code>tidyverse</code> lives here!) and more on GitHub (like <code>emo</code>).</p></li>
+</ul>
+</section>
+<section>
+<section id="the-big-picture" class="title-slide slide level1 center">
+<h1>The big picture</h1>
 <center>
 <img data-src="figures/data-science-big-picture.png">
 </center>
-<p><code>readr</code>, <code>janitor::clean_names()</code> <code>tidyr</code> <code>dplyr</code> <code>ggplot2</code> <code>tidymodels</code></p>
 </section>
+<section id="transform-wrangling---week-2---3" class="slide level2">
+<h2>Transform (wrangling) - Week 2 - 3</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href=""></a>mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">kpl =</span> mpg <span class="sc">*</span> <span class="fl">0.425144</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href=""></a>  <span class="fu">filter</span>(vs <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-5"><a href=""></a>  <span class="fu">group_by</span>(cyl) <span class="sc">|&gt;</span> </span>
+<span id="cb3-6"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">disp =</span> <span class="fu">mean</span>(disp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb3-7"><a href=""></a>            <span class="at">kpl =</span> <span class="fu">mean</span>(kpl, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href=""></a>  <span class="fu">arrange</span>(disp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="visualization---week-3---4" class="slide level2">
+<h2>Visualization - Week 3 - 4</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>mtcars2 <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">vs =</span> <span class="fu">ifelse</span>(vs <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"V-shaped"</span>, <span class="st">"Straight"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href=""></a>  <span class="fu">rename</span>(<span class="at">Engine =</span> vs) </span>
+<span id="cb4-4"><a href=""></a></span>
+<span id="cb4-5"><a href=""></a>mtcars2 <span class="sc">|&gt;</span> </span>
+<span id="cb4-6"><a href=""></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> disp, <span class="at">color =</span> <span class="fu">as.factor</span>(cyl))) <span class="sc">+</span> </span>
+<span id="cb4-7"><a href=""></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb4-8"><a href=""></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(Engine), <span class="at">labeller =</span> label_both) <span class="sc">+</span> </span>
+<span id="cb4-9"><a href=""></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>, <span class="at">name =</span> <span class="st">"Number of cylinders"</span>) <span class="sc">+</span></span>
+<span id="cb4-10"><a href=""></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb4-11"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span> </span>
+<span id="cb4-12"><a href=""></a>  <span class="fu">xlab</span>(<span class="st">"Miles per gallon"</span>) <span class="sc">+</span> </span>
+<span id="cb4-13"><a href=""></a>  <span class="fu">ylab</span>(<span class="st">"Displacement (cu.in.)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="the-big-picture_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="visualization" class="slide level2">
+<h2>Visualization</h2>
+<p>Visual principles</p>
+
+<img data-src="the-big-picture_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
 <section id="in-next-few-weeks" class="slide level2 smaller">
 <h2>In next few weeks…</h2>
 <table class="caption-top">
@@ -332,17 +376,17 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <tr class="odd">
 <td>Week 2</td>
 <td>09/03</td>
-<td>tidy data concept <br> The <code>dplyr</code> package: <code>mutate</code>, <code>select</code>, <code>filter</code>, <code>arrange</code>, <code>summarize</code>,</td>
+<td>Welcome to tidyverse, tidy data concept</td>
 </tr>
 <tr class="even">
 <td></td>
 <td>09/05</td>
-<td></td>
+<td>The <code>dplyr</code> package: <code>mutate</code>, <code>select</code>, <code>filter</code>, <code>arrange</code>, <code>summarize</code></td>
 </tr>
 <tr class="odd">
 <td>Week 3</td>
 <td>09/08</td>
-<td>Visualization with <code>ggplot2</code>: geometry + aesthetics</td>
+<td>More on <code>dplyr</code> verbs: <code>pull</code>, <code>select</code>, <code>rename</code>, <code>between</code>, <code>ifelse</code>, <code>case_when</code></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -352,27 +396,22 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <tr class="odd">
 <td></td>
 <td>09/12</td>
-<td>Visualization with <code>ggplot2</code>: scale + color + facet + theme</td>
+<td>Visualization with <code>ggplot2</code>: geometry + aesthetics</td>
 </tr>
 <tr class="even">
 <td>Week 4</td>
 <td>09/15</td>
-<td>Advanced data wrangling: <code>dplyr::*_join</code>, <code>tidyr::pivot_longer</code>, and <code>tidyr::pivot_wider</code></td>
+<td>Visualization with <code>ggplot2</code>: scale + color + facet + theme</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>09/17</td>
-<td>Dealing with time: the <code>lubridate</code> package</td>
+<td>Advanced data wrangling: <code>dplyr::*_join</code>, <code>tidyr::pivot_longer</code>, and <code>tidyr::pivot_wider</code></td>
 </tr>
 <tr class="even">
 <td>…</td>
 <td></td>
 <td>…</td>
-</tr>
-<tr class="odd">
-<td>Week 7</td>
-<td>10/08</td>
-<td>Dealing with text: the <code>stringr</code> package</td>
 </tr>
 </tbody>
 </table>
@@ -392,7 +431,7 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 </div><div class="column" style="width:38%;">
 <p><img data-src="figures/books.png"></p>
 </div></div>
-</section>
+</section></section>
 <section>
 <section id="r-beginner-pack" class="title-slide slide level1 center">
 <h1>R beginner pack</h1>
@@ -414,9 +453,9 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <section id="gapminder-data-1" class="slide level2">
 <h2>Gapminder Data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># install.packages("gapminder")</span></span>
-<span id="cb3-2"><a href=""></a><span class="fu">library</span>(gapminder)</span>
-<span id="cb3-3"><a href=""></a>gapminder<span class="sc">::</span>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="co"># install.packages("gapminder")</span></span>
+<span id="cb5-2"><a href=""></a><span class="fu">library</span>(gapminder)</span>
+<span id="cb5-3"><a href=""></a>gapminder<span class="sc">::</span>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,704 × 6
    country     continent  year lifeExp      pop gdpPercap
@@ -438,7 +477,7 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <section id="read-documentation" class="slide level2">
 <h2>Read documentation</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>?gapminder<span class="sc">::</span>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>?gapminder<span class="sc">::</span>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="columns fragment">
 <div class="column">
@@ -457,19 +496,19 @@ We can write some simple code to check the information in the documentation.
 <p>The main data frame gapminder has 1704 rows and 6 variables:</p>
 </blockquote>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="fu">nrow</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">nrow</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1704</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">ncol</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">ncol</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">dim</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="fu">dim</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1704    6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="fu">colnames</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a><span class="fu">colnames</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "country"   "continent" "year"      "lifeExp"   "pop"       "gdpPercap"</code></pre>
 </div>
@@ -482,7 +521,7 @@ We can write some simple code to check the information in the documentation.
 <p>#A tibble: 1,704 × 6</p>
 </blockquote>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,704 × 6
    country     continent  year lifeExp      pop gdpPercap
@@ -507,7 +546,7 @@ We can write some simple code to check the information in the documentation.
 <p>Country is a factor with 142 levels</p>
 </blockquote>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>gapminder<span class="sc">$</span>country <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>gapminder<span class="sc">$</span>country <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 142</code></pre>
 </div>
@@ -519,7 +558,7 @@ We can write some simple code to check the information in the documentation.
 <p>Continent is a factor with 5 levels</p>
 </blockquote>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>gapminder<span class="sc">$</span>continent <span class="sc">|&gt;</span> <span class="fu">unique</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>gapminder<span class="sc">$</span>continent <span class="sc">|&gt;</span> <span class="fu">unique</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] Asia     Europe   Africa   Americas Oceania 
 Levels: Africa Americas Asia Europe Oceania</code></pre>
@@ -532,18 +571,18 @@ Levels: Africa Americas Asia Europe Oceania</code></pre>
 <p>Year ranges from 1952 to 2007 in increments of 5 years</p>
 </blockquote>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>gapminder<span class="sc">$</span>year <span class="sc">|&gt;</span> <span class="fu">range</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>gapminder<span class="sc">$</span>year <span class="sc">|&gt;</span> <span class="fu">range</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1952 2007</code></pre>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>gapminder<span class="sc">$</span>year <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>gapminder<span class="sc">$</span>year <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 2002 2007</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>gapminder<span class="sc">$</span>year <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">diff</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>gapminder<span class="sc">$</span>year <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">diff</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 5 5 5 5 5 5 5 5 5 5 5</code></pre>
 </div>
@@ -553,23 +592,23 @@ Levels: Africa Americas Asia Europe Oceania</code></pre>
 <section id="whats-the-min-mean-median-max-of-lifeexp" class="slide level2">
 <h2><span class="r-fit-text">What’s the min, mean, median, max of lifeExp?</span></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a><span class="fu">min</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a><span class="fu">min</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 23.599</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a><span class="fu">mean</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a><span class="fu">mean</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 59.47444</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a><span class="fu">median</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a><span class="fu">median</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 60.7125</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a><span class="fu">max</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a><span class="fu">max</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 82.603</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a><span class="fu">summary</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a><span class="fu">summary</span>(gapminder<span class="sc">$</span>lifeExp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   23.60   48.20   60.71   59.47   70.85   82.60 </code></pre>
@@ -579,7 +618,7 @@ Levels: Africa Americas Asia Europe Oceania</code></pre>
 <section id="flight-data" class="slide level2">
 <h2>Flight data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a>nycflights13<span class="sc">::</span>flights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a>nycflights13<span class="sc">::</span>flights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 19
    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
@@ -602,7 +641,7 @@ Levels: Africa Americas Asia Europe Oceania</code></pre>
 <section id="flight-data-dplyrglimpse" class="slide level2">
 <h2>Flight data: <code>dplyr::glimpse()</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a><span class="fu">glimpse</span>(nycflights13<span class="sc">::</span>flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a><span class="fu">glimpse</span>(nycflights13<span class="sc">::</span>flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 336,776
 Columns: 19
@@ -631,7 +670,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <section id="access-the-documentation-with" class="slide level2">
 <h2>Access the documentation with <code>?</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a>?dplyr<span class="sc">::</span>glimpse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href=""></a>?dplyr<span class="sc">::</span>glimpse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <center>
 <img data-src="figures/glimpse.png" style="width:60.0%">
@@ -640,7 +679,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <section id="look-at-the-first-few-rows" class="slide level2">
 <h2>Look at the first few rows</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a><span class="fu">head</span>(nycflights13<span class="sc">::</span>flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a><span class="fu">head</span>(nycflights13<span class="sc">::</span>flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 19
    year month   day dep_time sched_dep_time dep_delay
@@ -659,7 +698,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <section id="the-last-few-rows" class="slide level2">
 <h2>The last few rows?</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a><span class="fu">tail</span>(nycflights13<span class="sc">::</span>flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">tail</span>(nycflights13<span class="sc">::</span>flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 19
    year month   day dep_time sched_dep_time dep_delay
@@ -682,7 +721,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <section id="you-can-also-view-the-data" class="slide level2">
 <h2>You can also <code>View()</code> the data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">View</span>(nycflights13<span class="sc">::</span>flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a><span class="fu">View</span>(nycflights13<span class="sc">::</span>flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <center>
 <img data-src="figures/view.png" style="width:70.0%">
@@ -691,7 +730,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <section id="whats-the-average-of-arrival-delay-arr_delay" class="slide level2">
 <h2><span class="r-fit-text">What’s the average of arrival delay (<code>arr_delay</code>)</span></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href=""></a><span class="fu">mean</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href=""></a><span class="fu">mean</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA</code></pre>
 </div>
@@ -699,11 +738,11 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <p>why!!!</p>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href=""></a><span class="fu">is.na</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href=""></a><span class="fu">is.na</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href=""></a><span class="fu">is.na</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay) <span class="sc">|&gt;</span> <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href=""></a><span class="fu">is.na</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay) <span class="sc">|&gt;</span> <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 9430</code></pre>
 </div>
@@ -712,7 +751,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <div class="fragment">
 <p>A better way:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href=""></a><span class="fu">mean</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href=""></a><span class="fu">mean</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6.895377</code></pre>
 </div>
@@ -723,7 +762,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <h2>Your time</h2>
 <p>Practice what we’ve just learn via</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href=""></a>usethis<span class="sc">::</span><span class="fu">create_from_github</span>(<span class="st">"SDS322E-2025FALL/0103-basics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href=""></a>usethis<span class="sc">::</span><span class="fu">create_from_github</span>(<span class="st">"SDS322E-2025FALL/0103-basics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 </section></section>
@@ -763,7 +802,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
-'smaller': false,
+'smaller': true,
  
         // Display controls in the bottom right corner
         controls: false,

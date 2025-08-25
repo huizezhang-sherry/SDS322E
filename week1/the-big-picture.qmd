@@ -7,6 +7,7 @@ format:
     slide-number: true
     show-slide-number: all
     aspectratio: 169
+    smaller: true
     theme: serif
     preview-links: auto
     pdf-separate-fragments: true
@@ -18,20 +19,19 @@ options(pillar.width = 80)
 library(tidyverse)
 library(gapminder)
 library(nycflights13)
+library(patchwork)
 ```
 
 ## R history and ecosystem
 
-S (Roger's week 2 slides)
+* 1976: S was initiated as an internal statistical analysis environment—originally implemented as Fortran libraries. S is a language that was developed by **John Chambers** and others at Bell Labs.
 
-Base R + packages
-  
-## Why data science
 
+* 1991: Created in New Zealand by **Ross Ihaka** and **Robert Gentleman**. Their experience developing R is documented in a 1996 JCGS paper.
+
+* 1997: The R Core Group is formed (containing some people associated with S-PLUS). The core group controls the source code for R. See more about the Foundation: <https://www.r-project.org/foundation/>
 
 ## Why R? 
-
-You don't need to write FORTRAN code to do data analysis!
 
 R code:
 
@@ -127,15 +127,72 @@ end program mtcars_summary
 
 ```
 
-## The big picture
+## R ecosystem
+
+* **Base packages**: base, methods, datasets, utils, grDevices, graphics, stats
+
+* **Recommended packages**: MASS, lattice, Matrix, nlme, survival, boot, cluster, codetools, foreign, KernSmooth, rpart, spatial, splines, tcltk
+
+* **Contributed packages**: 20,000 + packages contributed by users available on CRAN or Bioconductor (`tidyverse` lives here!) and more on GitHub (like `emo`).
+
+
+# The big picture
 
 <center>![](figures/data-science-big-picture.png)</center>
 
-`readr`, `janitor::clean_names()`
-`tidyr`
-`dplyr`
-`ggplot2`
-`tidymodels`
+## Transform (wrangling) - Week 2 - 3
+
+```{r echo = TRUE, eval = FALSE}
+library(tidyverse)
+mtcars |> 
+  mutate(kpl = mpg * 0.425144) |>
+  filter(vs == 0) |> 
+  group_by(cyl) |> 
+  summarize(disp = mean(disp, na.rm = TRUE), 
+            kpl = mean(kpl, na.rm = TRUE)) |>
+  arrange(disp)
+  
+```
+
+## Visualization - Week 3 - 4
+
+```{r fig.align='center'}
+mtcars2 <- mtcars |> 
+  mutate(vs = ifelse(vs == 0, "V-shaped", "Straight")) |>
+  rename(Engine = vs) 
+
+mtcars2 |> 
+  ggplot(aes(x = mpg, y = disp, color = as.factor(cyl))) + 
+  geom_point() + 
+  facet_wrap(vars(Engine), labeller = label_both) + 
+  scale_color_brewer(palette = "Dark2", name = "Number of cylinders") +
+  theme_bw() + 
+  theme(legend.position = "bottom") + 
+  xlab("Miles per gallon") + 
+  ylab("Displacement (cu.in.)")
+```
+
+
+## Visualization - week 3 - 4
+
+Visual principles
+
+```{r echo = FALSE}
+mtcars_tbl <- rownames_to_column(mtcars, var = "model") |> 
+  as_tibble()
+
+p1 <- mtcars_tbl |> 
+  ggplot(aes(x = disp, y = model)) + 
+  geom_col()
+
+p2 <- mtcars_tbl |>
+  mutate(model = fct_reorder(model, disp)) |> 
+  ggplot(aes(x = disp, y = model)) + 
+  geom_col()
+
+p1 | p2
+```
+
 
 
 ## In next few weeks... {.smaller}
@@ -143,15 +200,14 @@ end program mtcars_summary
 
 |Week |Date | Content|
 |---- |---| ------------------------|  
-|Week 2 |09/03| tidy data concept <br> The `dplyr` package: `mutate`, `select`, `filter`, `arrange`, `summarize`, |Week `group_by`|
-||09/05| |
-|Week 3 |09/08| Visualization with `ggplot2`: geometry + aesthetics|
+|Week 2 |09/03| Welcome to tidyverse, tidy data concept |
+||09/05| The `dplyr` package: `mutate`, `select`, `filter`, `arrange`, `summarize`|
+|Week 3 |09/08| More on `dplyr` verbs: `pull`, `select`, `rename`, `between`, `ifelse`, `case_when`|
 ||09/10| Visualization with `ggplot2`: geometry + aesthetics|
-| |09/12| Visualization with `ggplot2`: scale + color + facet + theme|
-|Week 4 |09/15| Advanced data wrangling: `dplyr::*_join`, `tidyr::pivot_longer`, and `tidyr::pivot_wider`|
-| |09/17| Dealing with time: the `lubridate` package|
+| |09/12| Visualization with `ggplot2`: geometry + aesthetics|
+|Week 4 |09/15| Visualization with `ggplot2`: scale + color + facet + theme|
+||09/17| Advanced data wrangling: `dplyr::*_join`, `tidyr::pivot_longer`, and `tidyr::pivot_wider`|
 |...||... |
-|Week 7 |10/08|	Dealing with text: the `stringr` package|
 
 
 ## Resources {.smaller}
