@@ -1,13 +1,13 @@
 ---
 title: "Elements of Data Science <br> SDS 322E"
-author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> week 01 lecture 01 Fall 2025"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin"
 format: 
   revealjs:
     scrollable: true
     slide-number: true
     show-slide-number: all
     aspectratio: 169
-    smaller: true
+    #smaller: true
     theme: serif
     preview-links: auto
     pdf-separate-fragments: true
@@ -142,19 +142,27 @@ end program mtcars_summary
 
 ## Transform (wrangling) - Week 2 - 3
 
+You shall be able to do this for later assessment! 
+
 ```{r echo = TRUE, eval = FALSE}
 library(tidyverse)
 mtcars |> 
-  mutate(kpl = mpg * 0.425144) |>
-  filter(vs == 0) |> 
-  group_by(cyl) |> 
+  # create a new variable 
+  mutate(kpl = mpg * 0.425144) |> 
+  # "select" rows
+  filter(vs == 0) |>
+  # do things by groups
+  group_by(cyl) |>  
+  # create a data summarization
   summarize(disp = mean(disp, na.rm = TRUE), 
-            kpl = mean(kpl, na.rm = TRUE)) |>
+            kpl = mean(kpl, na.rm = TRUE)) |> 
+  # sort the data frame by a variable
   arrange(disp)
-  
 ```
 
-## Visualization - Week 3 - 4
+## Visualization - Week 3 - 4 {.smaller}
+
+You shall be able to do this for later assessment! 
 
 ```{r fig.align='center'}
 mtcars2 <- mtcars |> 
@@ -209,6 +217,24 @@ p1 | p2
 ||09/17| Advanced data wrangling: `dplyr::*_join`, `tidyr::pivot_longer`, and `tidyr::pivot_wider`|
 |...||... |
 
+## In next few weeks... {.smaller}
+
+
+|Week |Date | Content|
+|---- |---| ------------------------|  
+|Week 5 |09/22| Spatial data: `sf` and `ggplot2::geom_sf()`|
+||09/24| Case study: flight data with map|
+||09/26| Let's make animation and interactive graphics in R|
+|Week 6 |09/29| Case study: flight data - departure and arrival pattern|
+||10/01| Webscraping|
+| |10/03| Case study: Wikipedia number of annual leave|
+|Week 7 |10/06| Wrangling string with `stringr`|
+||10/08| Text analysis with `tidytext`|
+||10/10| Project #1|
+|Week 8 |10/13| Sentiment analysis with `tidytext`|
+||10/15| Functional programming |
+
+
 
 ## Resources {.smaller}
 
@@ -234,28 +260,13 @@ p1 | p2
 ::::
 
 
-# R beginner pack
+# R basics
 
-## Basic operations
-
-basic calculation: `1 + 1`
-assign `<-` and `=`
-function(arguments)
-pipe: `function2(function(arguments), arguments)`: `function(arguments) |> function2(arguments)`
-`|>` and `%>%`
-
-`Command + z` to undo what you just did 
-`Command + y` to redo what you just undid
-
-
-## Best practice
-
-lower_case
-
-
-## Gapminder Data
+## Gapminder Data {.smaller}
 
 <https://www.youtube.com/watch?v=jbkSRLYSojo&ab_channel=BBC>
+
+![](figures/gapminder.png)
 
 
 ## Gapminder Data
@@ -263,14 +274,14 @@ lower_case
 ```{r}
 # install.packages("gapminder")
 library(gapminder)
-gapminder::gapminder
+gapminder
 ```
 
 ## Read documentation 
 
 
 ```{r}
-?gapminder::gapminder
+?gapminder
 ```
 
 
@@ -309,7 +320,6 @@ gapminder::gapminder
 ```{r}
 nrow(gapminder)
 ncol(gapminder)
-dim(gapminder)
 colnames(gapminder)
 ```
 
@@ -323,21 +333,28 @@ colnames(gapminder)
 gapminder
 ```
 
+## How many continent?
+
+> Continent is a factor with 5 levels
+
+```{r}
+unique(gapminder$continent) 
+```
 
 ## How many countries? 
 
 > Country is a factor with 142 levels
 
 ```{r}
-gapminder$country |> unique() |> length()
+unique(gapminder$country) 
 ```
 
-## How many continent?
+## How many countries? 
 
-> Continent is a factor with 5 levels
+> Country is a factor with 142 levels
 
 ```{r}
-gapminder$continent |> unique() 
+length(unique(gapminder$country))
 ```
 
 ## What' the range of year reported?
@@ -345,14 +362,14 @@ gapminder$continent |> unique()
 > Year ranges from 1952 to 2007 in increments of 5 years
 
 ```{r}
-gapminder$year |> range()
+range(gapminder$year)
 ```
 
 . . .
 
 ```{r}
-gapminder$year |> unique()
-gapminder$year |> unique() |> diff()
+unique(gapminder$year)
+diff(unique(gapminder$year))
 ```
 
 
@@ -375,7 +392,8 @@ options(pillar.width = 80,
 ```
 
 ```{r}
-nycflights13::flights
+library(nycflights13)
+flights
 ```
 
 . . .
@@ -391,7 +409,7 @@ options(pillar.width = 60,
 ```
 
 ```{r}
-glimpse(nycflights13::flights)
+glimpse(flights)
 ```
 
 
@@ -407,13 +425,13 @@ glimpse(nycflights13::flights)
 ## Look at the first few rows
 
 ```{r}
-head(nycflights13::flights, n = 3)
+head(flights, n = 3)
 ```
 
 ## The last few rows?
 
 ```{r}
-tail(nycflights13::flights, n = 3)
+tail(flights, n = 3)
 ```
 
 
@@ -426,7 +444,7 @@ Check the documentation to see the default `n` value for `head()` and `tail()`.
 ## You can also `View()` the data
 
 ```{r}
-View(nycflights13::flights)
+View(flights)
 ```
 
 <center>![](figures/view.png){width="70%"}</center>
@@ -435,17 +453,16 @@ View(nycflights13::flights)
 ## [What's the average of arrival delay (`arr_delay`)]{.r-fit-text}
 
 ```{r}
-mean(nycflights13::flights$arr_delay)
+mean(flights$arr_delay)
 ```
 
-why!!!
+why?
 
 . . . 
 
 ```{r}
-is.na(nycflights13::flights$arr_delay) |> head(n = 10)
-
-is.na(nycflights13::flights$arr_delay) |> sum()
+tail(flights$arr_delay, n = 10)
+is.na(tail(flights$arr_delay, n = 10))
 ```
 
 . . .
@@ -453,9 +470,20 @@ is.na(nycflights13::flights$arr_delay) |> sum()
 A better way: 
 
 ```{r}
-mean(nycflights13::flights$arr_delay, na.rm = TRUE)
+mean(flights$arr_delay, na.rm = TRUE)
 ```
 
+## Lesson learnt {.smaller}
+
+* Practice installing and loading packages with `install.packages("pkg")` and `library(pkg)`.
+
+* Read documentation of a function or a dataset with `?FUN` or `?DATASET`. 
+
+* Check the number of rows, columns, column names with `nrow()`, `ncol()`, `colnames()`.
+
+* Compute summary statistics with `unique()`, `length()`, `range()`, `diff()`, `min()`, `mean()`, `median()`, `max()`, `summary()`. Use the argument `na.rm = TRUE` to accommodate missing values.
+
+* View data with `View()`, `dplyr::glimpse()` and View the first or last few rows with `head()` and `tail()`.
 
 ## Your time 
 

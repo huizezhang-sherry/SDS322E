@@ -9,7 +9,7 @@
 <link href="the-big-picture_files/libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.30">
 
-  <meta name="author" content="H. Sherry Zhang   Department of Statistics and Data Sciences   The University of Texas at Austin     week 01 lecture 01 Fall 2025">
+  <meta name="author" content="H. Sherry Zhang   Department of Statistics and Data Sciences   The University of Texas at Austin">
   <title>Elements of Data Science   SDS 322E</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -199,7 +199,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br> <br> week 01 lecture 01 Fall 2025 
+H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin 
 </div>
 </div>
 </div>
@@ -322,19 +322,26 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 </section>
 <section id="transform-wrangling---week-2---3" class="slide level2">
 <h2>Transform (wrangling) - Week 2 - 3</h2>
+<p>You shall be able to do this for later assessment!</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb3-2"><a href=""></a>mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">kpl =</span> mpg <span class="sc">*</span> <span class="fl">0.425144</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href=""></a>  <span class="fu">filter</span>(vs <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb3-5"><a href=""></a>  <span class="fu">group_by</span>(cyl) <span class="sc">|&gt;</span> </span>
-<span id="cb3-6"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">disp =</span> <span class="fu">mean</span>(disp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb3-7"><a href=""></a>            <span class="at">kpl =</span> <span class="fu">mean</span>(kpl, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-8"><a href=""></a>  <span class="fu">arrange</span>(disp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href=""></a>  <span class="co"># create a new variable </span></span>
+<span id="cb3-4"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">kpl =</span> mpg <span class="sc">*</span> <span class="fl">0.425144</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-5"><a href=""></a>  <span class="co"># "select" rows</span></span>
+<span id="cb3-6"><a href=""></a>  <span class="fu">filter</span>(vs <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href=""></a>  <span class="co"># do things by groups</span></span>
+<span id="cb3-8"><a href=""></a>  <span class="fu">group_by</span>(cyl) <span class="sc">|&gt;</span>  </span>
+<span id="cb3-9"><a href=""></a>  <span class="co"># create a data summarization</span></span>
+<span id="cb3-10"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">disp =</span> <span class="fu">mean</span>(disp, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb3-11"><a href=""></a>            <span class="at">kpl =</span> <span class="fu">mean</span>(kpl, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-12"><a href=""></a>  <span class="co"># sort the data frame by a variable</span></span>
+<span id="cb3-13"><a href=""></a>  <span class="fu">arrange</span>(disp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="visualization---week-3---4" class="slide level2">
+<section id="visualization---week-3---4" class="slide level2 smaller">
 <h2>Visualization - Week 3 - 4</h2>
+<p>You shall be able to do this for later assessment!</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>mtcars2 <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> </span>
 <span id="cb4-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">vs =</span> <span class="fu">ifelse</span>(vs <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"V-shaped"</span>, <span class="st">"Straight"</span>)) <span class="sc">|&gt;</span></span>
@@ -352,8 +359,8 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 
 </div>
 <img data-src="the-big-picture_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
-<section id="visualization" class="slide level2">
-<h2>Visualization</h2>
+<section id="visualization---week-3---4-1" class="slide level2">
+<h2>Visualization - week 3 - 4</h2>
 <p>Visual principles</p>
 
 <img data-src="the-big-picture_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
@@ -416,6 +423,75 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 </tbody>
 </table>
 </section>
+<section id="in-next-few-weeks-1" class="slide level2 smaller">
+<h2>In next few weeks…</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Week</th>
+<th>Date</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Week 5</td>
+<td>09/22</td>
+<td>Spatial data: <code>sf</code> and <code>ggplot2::geom_sf()</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>09/24</td>
+<td>Case study: flight data with map</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>09/26</td>
+<td>Let’s make animation and interactive graphics in R</td>
+</tr>
+<tr class="even">
+<td>Week 6</td>
+<td>09/29</td>
+<td>Case study: flight data - departure and arrival pattern</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>10/01</td>
+<td>Webscraping</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>10/03</td>
+<td>Case study: Wikipedia number of annual leave</td>
+</tr>
+<tr class="odd">
+<td>Week 7</td>
+<td>10/06</td>
+<td>Wrangling string with <code>stringr</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>10/08</td>
+<td>Text analysis with <code>tidytext</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>10/10</td>
+<td>Project #1</td>
+</tr>
+<tr class="even">
+<td>Week 8</td>
+<td>10/13</td>
+<td>Sentiment analysis with <code>tidytext</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>10/15</td>
+<td>Functional programming</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="resources" class="slide level2 smaller">
 <h2>Resources</h2>
 <div class="columms">
@@ -433,29 +509,21 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 </div></div>
 </section></section>
 <section>
-<section id="r-beginner-pack" class="title-slide slide level1 center">
-<h1>R beginner pack</h1>
+<section id="r-basics" class="title-slide slide level1 center">
+<h1>R basics</h1>
 
 </section>
-<section id="basic-operations" class="slide level2">
-<h2>Basic operations</h2>
-<p>basic calculation: <code>1 + 1</code> assign <code>&lt;-</code> and <code>=</code> function(arguments) pipe: <code>function2(function(arguments), arguments)</code>: <code>function(arguments) |&gt; function2(arguments)</code> <code>|&gt;</code> and <code>%&gt;%</code></p>
-<p><code>Command + z</code> to undo what you just did <code>Command + y</code> to redo what you just undid</p>
-</section>
-<section id="best-practice" class="slide level2">
-<h2>Best practice</h2>
-<p>lower_case</p>
-</section>
-<section id="gapminder-data" class="slide level2">
+<section id="gapminder-data" class="slide level2 smaller">
 <h2>Gapminder Data</h2>
 <p><a href="https://www.youtube.com/watch?v=jbkSRLYSojo&amp;ab_channel=BBC" class="uri">https://www.youtube.com/watch?v=jbkSRLYSojo&amp;ab_channel=BBC</a></p>
-</section>
+
+<img data-src="figures/gapminder.png" class="r-stretch"></section>
 <section id="gapminder-data-1" class="slide level2">
 <h2>Gapminder Data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="co"># install.packages("gapminder")</span></span>
 <span id="cb5-2"><a href=""></a><span class="fu">library</span>(gapminder)</span>
-<span id="cb5-3"><a href=""></a>gapminder<span class="sc">::</span>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-3"><a href=""></a>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,704 × 6
    country     continent  year lifeExp      pop gdpPercap
@@ -477,7 +545,7 @@ H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The Univers
 <section id="read-documentation" class="slide level2">
 <h2>Read documentation</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>?gapminder<span class="sc">::</span>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>?gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="columns fragment">
 <div class="column">
@@ -504,11 +572,7 @@ We can write some simple code to check the information in the documentation.
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="fu">dim</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1704    6</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a><span class="fu">colnames</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a><span class="fu">colnames</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "country"   "continent" "year"      "lifeExp"   "pop"       "gdpPercap"</code></pre>
 </div>
@@ -521,7 +585,7 @@ We can write some simple code to check the information in the documentation.
 <p>#A tibble: 1,704 × 6</p>
 </blockquote>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,704 × 6
    country     continent  year lifeExp      pop gdpPercap
@@ -540,28 +604,88 @@ We can write some simple code to check the information in the documentation.
 </div>
 </div>
 </section>
-<section id="how-many-countries" class="slide level2">
-<h2>How many countries?</h2>
-<blockquote>
-<p>Country is a factor with 142 levels</p>
-</blockquote>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>gapminder<span class="sc">$</span>country <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 142</code></pre>
-</div>
-</div>
-</section>
 <section id="how-many-continent" class="slide level2">
 <h2>How many continent?</h2>
 <blockquote>
 <p>Continent is a factor with 5 levels</p>
 </blockquote>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>gapminder<span class="sc">$</span>continent <span class="sc">|&gt;</span> <span class="fu">unique</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a><span class="fu">unique</span>(gapminder<span class="sc">$</span>continent) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] Asia     Europe   Africa   Americas Oceania 
 Levels: Africa Americas Asia Europe Oceania</code></pre>
+</div>
+</div>
+</section>
+<section id="how-many-countries" class="slide level2">
+<h2>How many countries?</h2>
+<blockquote>
+<p>Country is a factor with 142 levels</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a><span class="fu">unique</span>(gapminder<span class="sc">$</span>country) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] Afghanistan              Albania                  Algeria                 
+  [4] Angola                   Argentina                Australia               
+  [7] Austria                  Bahrain                  Bangladesh              
+ [10] Belgium                  Benin                    Bolivia                 
+ [13] Bosnia and Herzegovina   Botswana                 Brazil                  
+ [16] Bulgaria                 Burkina Faso             Burundi                 
+ [19] Cambodia                 Cameroon                 Canada                  
+ [22] Central African Republic Chad                     Chile                   
+ [25] China                    Colombia                 Comoros                 
+ [28] Congo, Dem. Rep.         Congo, Rep.              Costa Rica              
+ [31] Cote d'Ivoire            Croatia                  Cuba                    
+ [34] Czech Republic           Denmark                  Djibouti                
+ [37] Dominican Republic       Ecuador                  Egypt                   
+ [40] El Salvador              Equatorial Guinea        Eritrea                 
+ [43] Ethiopia                 Finland                  France                  
+ [46] Gabon                    Gambia                   Germany                 
+ [49] Ghana                    Greece                   Guatemala               
+ [52] Guinea                   Guinea-Bissau            Haiti                   
+ [55] Honduras                 Hong Kong, China         Hungary                 
+ [58] Iceland                  India                    Indonesia               
+ [61] Iran                     Iraq                     Ireland                 
+ [64] Israel                   Italy                    Jamaica                 
+ [67] Japan                    Jordan                   Kenya                   
+ [70] Korea, Dem. Rep.         Korea, Rep.              Kuwait                  
+ [73] Lebanon                  Lesotho                  Liberia                 
+ [76] Libya                    Madagascar               Malawi                  
+ [79] Malaysia                 Mali                     Mauritania              
+ [82] Mauritius                Mexico                   Mongolia                
+ [85] Montenegro               Morocco                  Mozambique              
+ [88] Myanmar                  Namibia                  Nepal                   
+ [91] Netherlands              New Zealand              Nicaragua               
+ [94] Niger                    Nigeria                  Norway                  
+ [97] Oman                     Pakistan                 Panama                  
+[100] Paraguay                 Peru                     Philippines             
+[103] Poland                   Portugal                 Puerto Rico             
+[106] Reunion                  Romania                  Rwanda                  
+[109] Sao Tome and Principe    Saudi Arabia             Senegal                 
+[112] Serbia                   Sierra Leone             Singapore               
+[115] Slovak Republic          Slovenia                 Somalia                 
+[118] South Africa             Spain                    Sri Lanka               
+[121] Sudan                    Swaziland                Sweden                  
+[124] Switzerland              Syria                    Taiwan                  
+[127] Tanzania                 Thailand                 Togo                    
+[130] Trinidad and Tobago      Tunisia                  Turkey                  
+[133] Uganda                   United Kingdom           United States           
+[136] Uruguay                  Venezuela                Vietnam                 
+[139] West Bank and Gaza       Yemen, Rep.              Zambia                  
+[142] Zimbabwe                
+142 Levels: Afghanistan Albania Algeria Angola Argentina Australia ... Zimbabwe</code></pre>
+</div>
+</div>
+</section>
+<section id="how-many-countries-1" class="slide level2">
+<h2>How many countries?</h2>
+<blockquote>
+<p>Country is a factor with 142 levels</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a><span class="fu">length</span>(<span class="fu">unique</span>(gapminder<span class="sc">$</span>country))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 142</code></pre>
 </div>
 </div>
 </section>
@@ -571,18 +695,18 @@ Levels: Africa Americas Asia Europe Oceania</code></pre>
 <p>Year ranges from 1952 to 2007 in increments of 5 years</p>
 </blockquote>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a>gapminder<span class="sc">$</span>year <span class="sc">|&gt;</span> <span class="fu">range</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="fu">range</span>(gapminder<span class="sc">$</span>year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1952 2007</code></pre>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>gapminder<span class="sc">$</span>year <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a><span class="fu">unique</span>(gapminder<span class="sc">$</span>year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 2002 2007</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>gapminder<span class="sc">$</span>year <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">diff</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a><span class="fu">diff</span>(<span class="fu">unique</span>(gapminder<span class="sc">$</span>year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 5 5 5 5 5 5 5 5 5 5 5</code></pre>
 </div>
@@ -618,7 +742,8 @@ Levels: Africa Americas Asia Europe Oceania</code></pre>
 <section id="flight-data" class="slide level2">
 <h2>Flight data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a>nycflights13<span class="sc">::</span>flights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a><span class="fu">library</span>(nycflights13)</span>
+<span id="cb38-2"><a href=""></a>flights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 19
    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
@@ -641,7 +766,7 @@ Levels: Africa Americas Asia Europe Oceania</code></pre>
 <section id="flight-data-dplyrglimpse" class="slide level2">
 <h2>Flight data: <code>dplyr::glimpse()</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a><span class="fu">glimpse</span>(nycflights13<span class="sc">::</span>flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a><span class="fu">glimpse</span>(flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 336,776
 Columns: 19
@@ -679,7 +804,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <section id="look-at-the-first-few-rows" class="slide level2">
 <h2>Look at the first few rows</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a><span class="fu">head</span>(nycflights13<span class="sc">::</span>flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href=""></a><span class="fu">head</span>(flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 19
    year month   day dep_time sched_dep_time dep_delay
@@ -698,7 +823,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <section id="the-last-few-rows" class="slide level2">
 <h2>The last few rows?</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">tail</span>(nycflights13<span class="sc">::</span>flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a><span class="fu">tail</span>(flights, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 19
    year month   day dep_time sched_dep_time dep_delay
@@ -721,7 +846,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <section id="you-can-also-view-the-data" class="slide level2">
 <h2>You can also <code>View()</code> the data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a><span class="fu">View</span>(nycflights13<span class="sc">::</span>flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href=""></a><span class="fu">View</span>(flights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <center>
 <img data-src="figures/view.png" style="width:70.0%">
@@ -730,33 +855,43 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 <section id="whats-the-average-of-arrival-delay-arr_delay" class="slide level2">
 <h2><span class="r-fit-text">What’s the average of arrival delay (<code>arr_delay</code>)</span></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href=""></a><span class="fu">mean</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href=""></a><span class="fu">mean</span>(flights<span class="sc">$</span>arr_delay)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA</code></pre>
 </div>
 </div>
-<p>why!!!</p>
+<p>why?</p>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href=""></a><span class="fu">is.na</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href=""></a><span class="fu">tail</span>(flights<span class="sc">$</span>arr_delay, <span class="at">n =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
+<pre><code> [1] -20 -16   1 -25  NA  NA  NA  NA  NA  NA</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href=""></a><span class="fu">is.na</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay) <span class="sc">|&gt;</span> <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href=""></a><span class="fu">is.na</span>(<span class="fu">tail</span>(flights<span class="sc">$</span>arr_delay, <span class="at">n =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 9430</code></pre>
+<pre><code> [1] FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE</code></pre>
 </div>
 </div>
 </div>
 <div class="fragment">
 <p>A better way:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href=""></a><span class="fu">mean</span>(nycflights13<span class="sc">::</span>flights<span class="sc">$</span>arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href=""></a><span class="fu">mean</span>(flights<span class="sc">$</span>arr_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6.895377</code></pre>
 </div>
 </div>
 </div>
+</section>
+<section id="lesson-learnt" class="slide level2 smaller">
+<h2>Lesson learnt</h2>
+<ul>
+<li><p>Practice installing and loading packages with <code>install.packages("pkg")</code> and <code>library(pkg)</code>.</p></li>
+<li><p>Read documentation of a function or a dataset with <code>?FUN</code> or <code>?DATASET</code>.</p></li>
+<li><p>Check the number of rows, columns, column names with <code>nrow()</code>, <code>ncol()</code>, <code>colnames()</code>.</p></li>
+<li><p>Compute summary statistics with <code>unique()</code>, <code>length()</code>, <code>range()</code>, <code>diff()</code>, <code>min()</code>, <code>mean()</code>, <code>median()</code>, <code>max()</code>, <code>summary()</code>. Use the argument <code>na.rm = TRUE</code> to accommodate missing values.</p></li>
+<li><p>View data with <code>View()</code>, <code>dplyr::glimpse()</code> and View the first or last few rows with <code>head()</code> and <code>tail()</code>.</p></li>
+</ul>
 </section>
 <section id="your-time" class="slide level2">
 <h2>Your time</h2>
@@ -802,7 +937,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05…</code></pre>
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
-'smaller': true,
+'smaller': false,
  
         // Display controls in the bottom right corner
         controls: false,
