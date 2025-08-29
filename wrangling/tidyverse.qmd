@@ -14,7 +14,7 @@ format:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center")
 options(pillar.width = 70)
 library(tidyverse)
 library(tsibble)
@@ -28,57 +28,306 @@ theme_set(
   )
 ```
 
-## Welcome to tidyverse {background-image="figures/tidyverse.png" background-size="90%"}
+## Learning objectives
+
+* Understand the concept of tidy data: identify whether a dataset is tidy or not (we will cover how to tidy a messy data in code in week 4).
+
+* Understand the pipe operator (`|>`): you need to know how to read and think about code with pipes.
+
+## Seek helps during the office hours {.bigger}
+
+GDC (Gates Dell Complex) level 7 open space
+
+* Monday 10-12pm after class with me 
+* Tuesday 2-3:15pm with Luke Bellinger (UGCA)
+* Wednesday 3-5pm with Arka Sinha (Grad TA)
+* Friday 10-11am with Luke Bellinger (UGCA)
 
 
-<!-- # Tidy data  -->
+## {background-image="figures/tidydata_1.jpg" background-size="95%"}
+:::footer
+Artwork by @allison_horst
+:::
 
-<!--   - data.frame and tibble -->
-<!--   - tidy data principles -->
-<!--   - `tidyr`: pivot_longer, pivot_wider (maybe nest) -->
+## {background-image="figures/tidydata_2.jpg" background-size="95%"}
+:::footer
+Artwork by @allison_horst
+:::
 
-<!-- # `dplyr`  -->
+## {background-image="figures/tidydata_3.jpg" background-size="95%"}
+:::footer
+Artwork by @allison_horst
+:::
 
-<!--   - split-apply-combine -->
-<!--     - <https://hadley.github.io/25-tidyverse-history/> -->
-<!--   - basics: mutate, select, filter, arrange, summarize -->
+## {background-image="figures/tidydata_4.jpg" background-size="95%"}
+:::footer
+Artwork by @allison_horst
+:::
 
-<!-- # `dplyr`  -->
-
-<!--   - join data  -->
-
-<!-- # `stringr`: for processing string -->
-
-<!--   - `stringr` vs. base R -->
-<!--   - regular expression  -->
-
-<!-- # `lubridate`: for processing date and time -->
-
-<!--   - often the downloaded data is in character format -->
-<!--   - turn into a date format from character string -->
-<!--   - extract components of date and time -->
+## {background-image="figures/tidydata_5.jpg" background-size="95%"}
+:::footer
+Artwork by @allison_horst
+:::
 
 
 
-## [Some history]{.smaller}
+## Tidy data 
 
-```{r echo = FALSE}
-cran_raw <- cranlogs::cran_downloads(
-  packages = c("tidyr", "dplyr", "plyr", "reshape", "reshape2"), 
-  from = "2005-01-01", to = "2024-12-31") |> 
-  as_tibble()
+![](figures/tidy-illustration.png)
 
-cran_df <- cran_raw |> 
-  group_by(package, year = year(date)) |>
-  summarize(count = sum(count), .groups = "drop")
 
-cran_df |> 
-  ggplot(aes(x = year, y = count/ 1000000, color = package)) +
-  geom_point() + 
-  geom_line() + 
-  theme(legend.position = "bottom") +
-  ylab("Count (in million)")
+  * Each variable is a column
+  * Each observation is a row
+  * Each cell is a single value
+
+
+## Is this tidy? (1/8)
+
+income and religion in the US produced by Pew Research Center in 2014
+
+![](figures/messy-1.png)
+
+. . .
+
+`r set.seed(123); emo::ji("x")` No, because values (<$10k, $10-20k, $20-30k, ...) are in variable names
+
+## Is this tidy? (2/8)
+
+<center>![](figures/tidy-1.png){width="50%"}</center>
+
+. . .
+
+`r emo::ji("check")` Yes, because 1) The variables are: religion, income, and freq (count), 2) The observation is a demographic unit corresponding to a combination of religion and income
+
+
+## Is this tidy? (3/8)
+
+The Billboard dataset: the date a song first entered the Billboard Top 100
+
+![](figures/messy-2.png)
+
+. . .
+
+`r set.seed(123); emo::ji("x")`: No, because `wk1`, `wk2`, ... are values, not variables - they should be recorded in cells rather than in column names
+
+## Is this tidy? (4/8)
+
+<center>![](figures/tidy-2.png){width="80%"}</center>
+
+. . .
+
+`r emo::ji("check")` Yes, because 1)  The variables are: year, artist, time, track, date, week, and rank, 2) The observation is a recorded rank of a song in a particular week
+
+## Is this tidy? (5/8)
+
+Number of cases of TB (tuberculosis)
+
+<center>![](figures/messy-3.png){width="70%"}</center> 
+
+. . .
+
+Some information: `m014` means for male, 1-14 year old, `m1524` means for male 15-24 year old, etc.
+
+. . .
+
+`r set.seed(123); emo::ji("x")` No, because the column names contain multiple variable names: gender (m/f) and age (both lower end and higher end of the range).
+
+
+## Is this tidy? (6/8)
+
+<center>![](figures/tidy-3.png){width="60%"}</center>
+
+. . .
+
+`r emo::ji("check")` Yes, because 1) The variables are: country, year, column, and cases, and 2) the observation is the number of cases per year, per gender age group, per country
+
+. . .
+
+Both are tidy data - you will learn in week 4 how to clean it from (a) to (b)
+
+
+## [Is this tidy? (7/8) - the gapminder data]{.r-fit-text}
+ 
+```{r}
+gapminder::gapminder
 ```
 
+
+. . .
+
+`r emo::ji("check")` Yes, because
+
+* Each variable forms a column: country, continent, year, lifeExp, pop, gdpPercap 
+
+* Each observation forms a row: each row is a country in a particular year
+
+* Each value forms a cell: e.g. life expectancy of Afghanistan in 1952 is 28.801
+
+
+## Is this tidy? (8/8) - the flight data
+
+```{r}
+nycflights13::flights
+```
+
+. . .
+
+`r emo::ji("check")` Yes, because 1) each variable forms a column, 2) each observation forms a row: each row is one flight, and 3) each value forms a cell
+
+
+# The pipe operator 
+
+If you download the Friday code, you will see something like this:
+
+<center>`gapminder$country |> unique() |> length()`</center>
+
+
+## Once upon a time {.smaller}
+
+|Abstraction | Example|
+| -------- | -----|
+|`FUN_1(DATA)` |`unique(gapminder$lifeExp)` | 
+|`FUN_2(FUN_1(DATA))` | `length(unique(gapminder$lifeExp))` | 
+
+. . .
+
+Abstraction: `FUN_1(DATA, arg1 = val1, arg2 = val2)`
+
+Example: `mutate(mtcars, kpl = mpg * 0.425)`
+
+. . .
+
+<br>
+
+Abstraction: `FUN_2(FUN_1(DATA, arg1 = val1, arg2 = val2), arg3 = val3)`
+
+Example: `filter(mutate(mtcars, kpl = mpg * 0.425), vs ==0) `
+
+. . .
+
+<br>
+
+Abstraction: `FUN_3(FUN_2(FUN_1(DATA, arg1 = val1, arg2 = val2), arg3 = val3), arg4 = val4)`
+
+Example: `group_by(filter(mutate(mtcars, kpl = mpg * 0.425), vs ==0), cyl) `
+
+## [We could keep going on to make the code annoyingly long . . .]{.r-fit-text}
+
+Abstraction: `FUN_4(FUN_3(FUN_2(FUN_1(DATA, arg1 = val1, arg2 = val2), arg3 = val3), arg4 = val4), arg5 = val5)`
+
+Example: `summarize(group_by(filter(mutate(mtcars, kpl = mpg * 0.425), vs ==0), cyl), disp = mean(disp, na.rm = TRUE), kpl = mean(kpl, na.rm = TRUE))`|
+
+. . .
+
+:::{.columns}
+
+:::{.column}
+
+With line breaks we can do:
+
+```{r eval = FALSE}
+summarize(
+  group_by(
+    filter(
+      mutate(
+        mtcars, 
+        kpl = mpg * 0.425), 
+      vs ==0), 
+    cyl), 
+  disp = mean(disp, na.rm = TRUE), 
+  kpl = mean(kpl, na.rm = TRUE)
+  )
+```
+
+We need to read from middle out `r set.seed(123); emo::ji("sad")`
+
+:::
+
+:::{.column .fragment}
+
+How about this?
+
+```{r eval = FALSE}
+mtcars |>
+  mutate(kpl = mpg * 0.425144) |>
+  filter(vs == 0) |>
+  group_by(cyl) |>
+  summarize(
+    disp = mean(disp, na.rm = TRUE),
+    kpl = mean(kpl, na.rm = TRUE)
+    )
+```
+
+Much more natural `r set.seed(123); emo::ji("happy")`
+
+:::
+
+::::
+
+## Why this works?
+
+The pipe operator abstracts out the first argument of a function, so 
+
+<center>`unique(gapminder$country)`</center>
+<center>is equivalent to</center>
+<center>`gapminder$country |> unique()`</center>
+
+. . .
+
+This is a powerful abstraction that allows us to chain together a sequence of data transformations (aka dplyr functions) in a clear and readable way since all the tidyverse functions take the data frame as the first argument.
+
+* `mtcars` is a data frame
+* `mutate()` is a function that takes the dataset as its first argument, so we can do <center>`mtcars |> mutate(kpl = mpg * 0.425144)`</center>
+
+. . .
+
+* The output of above is still a data frame, so we can pipe it to the next function `filter()`: 
+
+<center>`mtcars |> mutate(kpl = mpg * 0.425144) |> filter(vs == 0)`</center>
+
+## Why this works?
+
+* The output of this is still a data frame, so we can pipe it to the next function `group_by()`:
+
+```{r eval = FALSE}
+mtcars |> 
+  mutate(kpl = mpg * 0.425144) |> 
+  filter(vs == 0) |> 
+  group_by(cyl)
+```
+
+. . .
+
+* The output of this is still a data frame, so we can pipe it to the next function `summarize()`:
+
+```{r eval = FALSE}
+mtcars |> 
+  mutate(kpl = mpg * 0.425144) |> 
+  filter(vs == 0) |> 
+  group_by(cyl) |> 
+  summarize(disp = mean(disp, na.rm = TRUE),
+            kpl = mean(kpl, na.rm = TRUE))
+```
+
+## Pipe logistics
+
+On your keyboard, the pipe operator is produced by:
+
+  * `|` (vertical bar): `shift` + `\` (backslash), plus
+  * `>` (greater than): `shift` + `.` (period).
+  
+There is a shortcut: `control + shift + M` (for Mac: `command + shift + M`)
+
+. . .
+
+You will see a lot of pipes in the Friday class - be prepared! 
+
+. . .
+
+Now, practice last Friday's script via
+
+```{r eval = FALSE}
+usethis::create_from_github("SDS322E-2025FALL/0103-basics", fork = FALSE)
+```
 
 
