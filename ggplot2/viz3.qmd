@@ -1,0 +1,237 @@
+---
+title: "Elements of Data Science <br> SDS 322E"
+author: "H. Sherry Zhang <br> Department of Statistics and Data Sciences <br> The University of Texas at Austin <br>  <br> Fall 2025"
+format: 
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    aspectratio: 169
+    smaller: true
+    theme: serif
+    preview-links: auto
+    pdf-separate-fragments: true
+include-in-header:
+  - text: |
+      <style>
+      .reveal .custom3070 > div.column:first-child {
+        width: 30%;
+      }
+      .reveal .custom3070 div.column:not(:first-child) {
+        width: 70%;
+      }
+      </style>
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center")
+library(tidyverse)
+library(patchwork)
+library(gapminder)
+library(nycflights13)
+library(flipbookr) # remotes::install_github("kjhealy/flipbookr@quarto")
+```
+
+## Scale
+
+`scale_<mapping>_<kind>()`
+
+scale_<x/y/color/fill>_<continuous/discrete/brewer/distiller>
+
+## Color/ Fill
+
+`scale_color/fill_brewer()` and `scale_color/fill_distiller()` to access the color palettes from the `RColorBrewer` package for discrete and continuous variables, respectively.
+
+```{r}
+RColorBrewer::display.brewer.all()
+```
+
+## [`scale_color_brewer()` for discrete variables]{.r-fit-text}
+
+```{r}
+penguins_df <- palmerpenguins::penguins |> 
+  filter(!is.na(bill_length_mm) & !is.na(bill_depth_mm))
+head(penguins_df, 2)
+```
+
+::::{.columns}
+
+:::{.column}
+```{r}
+penguins_df |> 
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm, 
+             color = species)) + 
+  geom_point() 
+```
+:::
+
+:::{.column}
+```{r}
+penguins_df |> 
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm, 
+             color = species)) + 
+  geom_point() + 
+  scale_color_brewer(palette = "Dark2") 
+```
+:::
+
+::::
+
+## [`scale_color_distiller()` for continous variables]{.r-fit-text}
+
+```{r}
+penguins_df |> 
+  ggplot(aes(x = bill_length_mm, 
+             y = bill_depth_mm, 
+             color = body_mass_g)) + 
+  geom_point() + 
+  scale_color_distiller(palette = "Spectral")
+```
+
+## The `colorspace` package
+
+  `scale_<aesthetic>_<datatype>_<colorscale>()`
+
+* `<aesthetic>` is the name of the aesthetic (`fill`, `color`, `colour`), 
+* `<datatype>` is the type of the variable plotted (`discrete` or `continuous`) and 
+* `<colorscale>` sets the type of the color scale used (`qualitative`, `sequential`, `diverging`, `divergingx`).
+
+```{r}
+#| class: custom3070
+#| output-location: column
+library(colorspace)
+hcl_palettes(plot = TRUE)
+```
+
+## [Consier using a color-blind-friendly palette]{.r-fit-text}
+
+## Theme cheatsheet
+
+<center>![](figures/theme-cheatsheet.png)</center>
+
+:::footer
+<https://isabella-b.com/blog/ggplot2-theme-elements-reference/>
+:::
+
+## [Please, please, please don't memorize all these theme elements!]{.r-fit-text}
+
+. . .
+
+Instead, put your cursor inside `theme()` and press the `Tab` key on your keyboard to activate this popup list available theme elements:
+
+<center>![](figures/theme.png)</center>
+
+```{r }
+#| eval: FALSE
+#| echo: FALSE
+#| label: theme-1
+#| code-line-numbers: true
+#| fig-align: center
+library(palmerpenguins)
+p1 <- penguins |> 
+  ggplot(aes(x = species, 
+             y = bill_depth_mm, 
+             color = species)) + 
+  ggbeeswarm::geom_quasirandom() + 
+  xlab("Bill length") + 
+  ylab("Bill depth") 
+p1 + #BREAK
+  # these are some useful ones
+  # give more x-axis space
+  theme(legend.position = "bottom") + #BREAK
+  # remove unnecessary reference lines
+  theme(panel.grid.minor = element_blank()) + #BREAK 
+  # adjust text orientation to avoid overlapping
+  theme(axis.text.x = element_text(angle = 90, 
+                                   hjust = 1)) + #BREAK
+  # larger text size for presentation
+  theme(text = element_text(size = 20)) + #BREAK
+  
+  # now you can free solo
+  theme(legend.title = element_text(
+    family = "menlo", size = 30)) + #BREAK
+  theme(panel.background = element_rect(
+    fill = "lightblue", color = "black")) + #BREAK
+  theme(panel.grid = element_line(
+    color = "black", size = 2)) #BREAK
+```
+
+`r flipbookr:::chunq_reveal("theme-1", lcolw = "50", rcolw = "50", smallcode = TRUE, break_type = "user", title = "Theme")`
+
+
+# {.smaller background-image="figures/patchwork-art.png" background-size="90%" background-position="50% 50%"} 
+
+::: footer
+Artwork by @allison_horst
+:::
+
+## Where goes wrong? {.smaller}
+
+```{r eval = FALSE}
+library(ggplot2)
+p1 <- ggplot(mtcars) + 
+  geom_point(aes(mpg, disp)) + 
+  ggtitle('Plot 1')
+
+p2 <- ggplot(mtcars) + 
+  geom_boxplot(aes(gear, disp, group = gear)) + 
+  ggtitle('Plot 2')
+
+
+p1 / p2
+```
+
+> Error in p1/p2 : non-numeric argument to binary operator
+
+```{r eval = FALSE}
+p1 | p2
+```
+
+> Error in p1 | p2 : operations are possible only for numeric, logical or complex types
+
+
+## Where goes wrong? 
+
+**Solution:** include `library(patchwork)` in your script
+
+**Easy answer:** You forgot to load the `patchwork` package. 
+
+. . .
+
+**Longer answer: **
+
+* By default, the symbol, `/`, is an operator for division and `patchwork` redefines the symbol to combine the two plots up-and-down.
+
+. . . 
+
+* When the package is not loaded, what R thinks is that `p1` and `p2` are not numbers that I can do arithmetic, so let me stop and throw an error message.
+
+## [My best friends in `patchwork`]{.r-fit-text}
+
+```{r}
+#| label: patchwork-1
+#| code-line-numbers: true
+#| fig-align: center
+p1 <- ggplot(mtcars) + 
+  geom_point(aes(
+    x = mpg, y = disp, 
+    color = cyl))
+p2 <- ggplot(mtcars) +
+  geom_point(aes(
+    x = mpg, y = hp, 
+    color = cyl))
+p1 + p2 + 
+  plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
+```
+
+`r flipbookr:::chunq_reveal("patchwork-1", lcolw = "40", rcolw = "60")`
+
+## `ggplot2` extensions
+
+<https://exts.ggplot2.tidyverse.org/gallery/> 
+
+<center>![](figures/ggplot2-extensions.png){width="80%"}</center>
+
