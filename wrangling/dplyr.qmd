@@ -30,7 +30,28 @@ We will learn the five most basic `dplyr` verbs to wrangle data, including:
 - `summarize()`: summarize data by groups
 - `arrange()`: sort data by one or more variables
 
-These are the fundamentals for building up more complex data wrangling, which will be covered in the next few weeks.
+These are the fundamentals for building up more complex data wrangling...
+
+## [Some history]{.smaller}
+
+```{r echo = FALSE}
+cran_raw <- cranlogs::cran_downloads(
+  packages = c("tidyr", "dplyr", "plyr", "reshape", "reshape2"), 
+  from = "2005-01-01", to = "2024-12-31") |> 
+  as_tibble()
+
+cran_df <- cran_raw |> 
+  group_by(package, year = year(date)) |>
+  summarize(count = sum(count), .groups = "drop")
+
+cran_df |> 
+  ggplot(aes(x = year, y = count/ 1000000, color = package)) +
+  geom_point() + 
+  geom_line() + 
+  theme(legend.position = "bottom") +
+  ylab("Count (in million)")
+```
+
 
 ## {background-image="figures/dplyr-filter.png" background-size="90%"}
 
@@ -85,13 +106,6 @@ flights |> filter(month == 1 | dep_delay > 120)
 (1 == 1) | (1 == 2) # TRUE or FALSE -> TRUE
 ```
 
-
-## [Warm up: how many airport are there in NYC?]{.r-fit-text}
-
-```{r}
-flights$origin |> unique()
-```
-
 ## [Find all the entries with departure delay larger than 2 hours]{.r-fit-text}
 
 ```{r}
@@ -119,6 +133,49 @@ flights |> filter(month = 1)
 flights |> filter(month == 1)
 ```
 
+## Your time 
+
+```{r eval = FALSE}
+usethis::create_from_github("SDS322E-2025FALL/0203-dplyr")
+```
+
+Read slides 4 and 5 to write the code answering the following questions:
+
+1) Find the flights that depart from `JFK` 
+2) Find the flights that depart from `JFK` in January
+3) Find the flights that depart from `EWR` and `LGA` and not in January
+
+You may start from:
+
+```{r eval = FALSE}
+flights |> filter(...)
+```
+
+## Solution
+
+1) Find the flights that depart from `JFK` 
+
+```{r eval = FALSE}
+flights |> filter(origin == "JFK")
+```
+
+. . .
+
+2) Find the flights that depart from `JFK` and `LGA` in January
+
+```{r eval = FALSE}
+flights |> filter(origin %in% c("JFK", "LGA"), month == 1)
+# its also okay to write
+flights |> filter(origin %in% c("JFK", "LGA") & month == 1)
+```
+
+. . .
+
+3) Find the flights that not depart from `EWR` and `LGA` and not in January
+
+```{r eval = FALSE}
+flights |> filter(!origin %in% c("EWR", "LGA"), month != 1)
+```
 
 ## {background-image="figures/dplyr-mutate.png" background-size="60%"}
 
@@ -316,6 +373,24 @@ flights |>
   summarize(avg_arr_delay = mean(arr_delay, na.rm = TRUE))
 ```
 
+## Your time
+
+Apply the `group_by()` + `summarize()` syntax to calculate the average flight distance for each of the three origins. Your results should look like this:
+
+```{r echo = FALSE}
+flights |> group_by(origin) |> summarize(distance = mean(distance, na.rm = TRUE))
+```
+
+. . .
+
+Solution
+
+```{r}
+flights |> group_by(origin) |> summarize(distance = mean(distance, na.rm = TRUE))
+```
+
+
+
 ## [Let me sneak in a new verb: `arrange()`]{.r-fit-text}
 
 Sometimes, we may wish to have the result sorted by a variable, this can be done with `arrange()`:
@@ -417,7 +492,7 @@ flights |>
 
 ##
 
-**Task: We want to sumamrize the proportion of flights with departure delay larger than 2 hours.**
+**Task: We want to summarize the proportion of flights with departure delay larger than 2 hours.**
 
 Thought process:
 
@@ -437,7 +512,7 @@ flights |>
 
 ## 
 
-**Task: We want to sumamrize the proportion of flights with departure delay larger than 2 hours.**
+**Task: We want to summarize the proportion of flights with departure delay larger than 2 hours.**
 
 Thought process:
 
@@ -527,9 +602,16 @@ flights |>
 
 ## Your time
 
-This is a lot! Practice what we've gone through with 
+Can you reproduce the code we just walked through for the following task? 
 
-```{r eval = FALSE}
-usethis::create_from_github("SDS322E-2025FALL/0203-dplyr")
-```
+<center>**Task: We want to summarize the proportion of flights with departure delay larger than 2 hours.**</center>
 
+<br>
+
+. . .
+
+Here is the step breakdown if you need:
+
+  1. I need label the rows as whether they are delay more than 2 hrs or not.  
+  2. Then I need to count the number of observations for over and below 2h delay.
+  3. Then I need to calculate proportion based on `n`.
