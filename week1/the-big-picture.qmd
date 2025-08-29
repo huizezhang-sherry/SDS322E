@@ -490,6 +490,6 @@ mean(flights$arr_delay, na.rm = TRUE)
 Practice what we've just learn via
 
 ```{r eval = FALSE}
-usethis::create_from_github("SDS322E-2025FALL/0103-basics")
+usethis::create_from_github("SDS322E-2025FALL/0103-basics", fork = FALSE)
 ```
 
